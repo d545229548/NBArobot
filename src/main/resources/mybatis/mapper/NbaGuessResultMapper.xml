@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiahui.nbarobot.dao.NbaGuessResultMapper" >
+  <resultMap id="BaseResultMap" type="com.jiahui.nbarobot.domain.NbaGuessResult" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="match_id" property="matchId" jdbcType="INTEGER" />
+    <result column="guest_team_name" property="guestTeamName" jdbcType="VARCHAR" />
+    <result column="guest_score" property="guestScore" jdbcType="VARCHAR" />
+    <result column="home_team_name" property="homeTeamName" jdbcType="VARCHAR" />
+    <result column="home_score" property="homeScore" jdbcType="VARCHAR" />
+    <result column="match_date" property="matchDate" jdbcType="DATE" />
+    <result column="guess_result" property="guessResult" jdbcType="VARCHAR" />
+    <result column="real_result" property="realResult" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="INTEGER" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_update" property="gmtUpdate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, match_id, guest_team_name, guest_score, home_team_name, home_score, match_date, 
+    guess_result, real_result, code, gmt_create, gmt_update
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from nba_guess_result
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from nba_guess_result
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jiahui.nbarobot.domain.NbaGuessResult" >
+    insert into nba_guess_result (id, match_id, guest_team_name, 
+      guest_score, home_team_name, home_score, 
+      match_date, guess_result, real_result, 
+      code, gmt_create, gmt_update
+      )
+    values (#{id,jdbcType=INTEGER}, #{matchId,jdbcType=INTEGER}, #{guestTeamName,jdbcType=VARCHAR}, 
+      #{guestScore,jdbcType=VARCHAR}, #{homeTeamName,jdbcType=VARCHAR}, #{homeScore,jdbcType=VARCHAR}, 
+      #{matchDate,jdbcType=DATE}, #{guessResult,jdbcType=VARCHAR}, #{realResult,jdbcType=VARCHAR}, 
+      #{code,jdbcType=INTEGER}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtUpdate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jiahui.nbarobot.domain.NbaGuessResult" >
+    insert into nba_guess_result
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="matchId != null" >
+        match_id,
+      </if>
+      <if test="guestTeamName != null" >
+        guest_team_name,
+      </if>
+      <if test="guestScore != null" >
+        guest_score,
+      </if>
+      <if test="homeTeamName != null" >
+        home_team_name,
+      </if>
+      <if test="homeScore != null" >
+        home_score,
+      </if>
+      <if test="matchDate != null" >
+        match_date,
+      </if>
+      <if test="guessResult != null" >
+        guess_result,
+      </if>
+      <if test="realResult != null" >
+        real_result,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create,
+      </if>
+      <if test="gmtUpdate != null" >
+        gmt_update,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="matchId != null" >
+        #{matchId,jdbcType=INTEGER},
+      </if>
+      <if test="guestTeamName != null" >
+        #{guestTeamName,jdbcType=VARCHAR},
+      </if>
+      <if test="guestScore != null" >
+        #{guestScore,jdbcType=VARCHAR},
+      </if>
+      <if test="homeTeamName != null" >
+        #{homeTeamName,jdbcType=VARCHAR},
+      </if>
+      <if test="homeScore != null" >
+        #{homeScore,jdbcType=VARCHAR},
+      </if>
+      <if test="matchDate != null" >
+        #{matchDate,jdbcType=DATE},
+      </if>
+      <if test="guessResult != null" >
+        #{guessResult,jdbcType=VARCHAR},
+      </if>
+      <if test="realResult != null" >
+        #{realResult,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=INTEGER},
+      </if>
+      <if test="gmtCreate != null" >
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtUpdate != null" >
+        #{gmtUpdate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jiahui.nbarobot.domain.NbaGuessResult" >
+    update nba_guess_result
+    <set >
+      <if test="matchId != null" >
+        match_id = #{matchId,jdbcType=INTEGER},
+      </if>
+      <if test="guestTeamName != null" >
+        guest_team_name = #{guestTeamName,jdbcType=VARCHAR},
+      </if>
+      <if test="guestScore != null" >
+        guest_score = #{guestScore,jdbcType=VARCHAR},
+      </if>
+      <if test="homeTeamName != null" >
+        home_team_name = #{homeTeamName,jdbcType=VARCHAR},
+      </if>
+      <if test="homeScore != null" >
+        home_score = #{homeScore,jdbcType=VARCHAR},
+      </if>
+      <if test="matchDate != null" >
+        match_date = #{matchDate,jdbcType=DATE},
+      </if>
+      <if test="guessResult != null" >
+        guess_result = #{guessResult,jdbcType=VARCHAR},
+      </if>
+      <if test="realResult != null" >
+        real_result = #{realResult,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=INTEGER},
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtUpdate != null" >
+        gmt_update = #{gmtUpdate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jiahui.nbarobot.domain.NbaGuessResult" >
+    update nba_guess_result
+    set match_id = #{matchId,jdbcType=INTEGER},
+      guest_team_name = #{guestTeamName,jdbcType=VARCHAR},
+      guest_score = #{guestScore,jdbcType=VARCHAR},
+      home_team_name = #{homeTeamName,jdbcType=VARCHAR},
+      home_score = #{homeScore,jdbcType=VARCHAR},
+      match_date = #{matchDate,jdbcType=DATE},
+      guess_result = #{guessResult,jdbcType=VARCHAR},
+      real_result = #{realResult,jdbcType=VARCHAR},
+      code = #{code,jdbcType=INTEGER},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_update = #{gmtUpdate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
