@@ -16,6 +16,8 @@ public interface NbaGuessResultMapper {
 
     NbaGuessResult selectByPrimaryKey(Integer id);
 
+    NbaGuessResult selectByMatchId(Integer matchId);
+
     int updateByPrimaryKeySelective(NbaGuessResult record);
 
     int updateByPrimaryKey(NbaGuessResult record);

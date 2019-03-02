@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
  * @author dongjiahui
  */
 @SpringBootApplication
-@MapperScan("com.jiahui.nbarobot")
+@MapperScan("com.jiahui.nbarobot.dao")
 @ComponentScan("com.jiahui.nbarobot")
 public class NbarobotApplication {
 

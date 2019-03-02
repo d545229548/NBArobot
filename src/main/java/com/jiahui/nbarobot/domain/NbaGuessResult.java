@@ -2,9 +2,16 @@ package com.jiahui.nbarobot.domain;
 
 import java.util.Date;
 
+/**
+ * @author dongjiahui
+ */
 public class NbaGuessResult {
     private Integer id;
 
+    /**
+     * 爬取来的比赛id，作为比赛唯一id来源，为了区分爬取平台，前面id加上来源
+     * 网易后面 + 001
+     */
     private Integer matchId;
 
     private String guestTeamName;
@@ -21,7 +28,10 @@ public class NbaGuessResult {
 
     private String realResult;
 
-    private Integer code;
+    /**
+     * 比赛盘口
+     */
+    private String code;
 
     private Date gmtCreate;
 
@@ -99,11 +109,11 @@ public class NbaGuessResult {
         this.realResult = realResult == null ? null : realResult.trim();
     }
 
-    public Integer getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(Integer code) {
+    public void setCode(String code) {
         this.code = code;
     }
 

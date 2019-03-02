@@ -1,7 +1,10 @@
 package com.jiahui.nbarobot.controller;
 
+import cn.hutool.json.JSONUtil;
 import com.jiahui.nbarobot.dao.NbaGuessResultMapper;
 import com.jiahui.nbarobot.domain.NbaGuessResult;
+import com.jiahui.nbarobot.service.NbaDataCopyService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,15 +17,21 @@ import javax.annotation.Resource;
 public class TestController {
 
     @Resource
+    private NbaDataCopyService nbaDataCopyService;
+    @Resource
     private NbaGuessResultMapper nbaGuessResultMapper;
 
     @RequestMapping("/test")
     public String test(){
+        return JSONUtil.toJsonStr(nbaDataCopyService.copyNeteaseNbaMath());
+    }
+
+    @RequestMapping("/test1")
+    public String test1(){
         NbaGuessResult nbaGuessResult = new NbaGuessResult();
-        nbaGuessResult.setRealResult("home");
-        nbaGuessResult.setCode(1);
+        nbaGuessResult.setCode("323");
         nbaGuessResultMapper.insertSelective(nbaGuessResult);
-        return "11";
+        return "2eee23223322";
     }
 
 }

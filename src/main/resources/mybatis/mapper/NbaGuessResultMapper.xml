@@ -11,7 +11,7 @@
     <result column="match_date" property="matchDate" jdbcType="DATE" />
     <result column="guess_result" property="guessResult" jdbcType="VARCHAR" />
     <result column="real_result" property="realResult" jdbcType="VARCHAR" />
-    <result column="code" property="code" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
     <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
     <result column="gmt_update" property="gmtUpdate" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -24,6 +24,12 @@
     <include refid="Base_Column_List" />
     from nba_guess_result
     where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByMatchId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from nba_guess_result
+    where match_id = #{matchId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from nba_guess_result
@@ -38,7 +44,7 @@
     values (#{id,jdbcType=INTEGER}, #{matchId,jdbcType=INTEGER}, #{guestTeamName,jdbcType=VARCHAR}, 
       #{guestScore,jdbcType=VARCHAR}, #{homeTeamName,jdbcType=VARCHAR}, #{homeScore,jdbcType=VARCHAR}, 
       #{matchDate,jdbcType=DATE}, #{guessResult,jdbcType=VARCHAR}, #{realResult,jdbcType=VARCHAR}, 
-      #{code,jdbcType=INTEGER}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtUpdate,jdbcType=TIMESTAMP}
+      #{code,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtUpdate,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.jiahui.nbarobot.domain.NbaGuessResult" >
@@ -110,7 +116,7 @@
         #{realResult,jdbcType=VARCHAR},
       </if>
       <if test="code != null" >
-        #{code,jdbcType=INTEGER},
+        #{code,jdbcType=VARCHAR},
       </if>
       <if test="gmtCreate != null" >
         #{gmtCreate,jdbcType=TIMESTAMP},
@@ -148,7 +154,7 @@
         real_result = #{realResult,jdbcType=VARCHAR},
       </if>
       <if test="code != null" >
-        code = #{code,jdbcType=INTEGER},
+        code = #{code,jdbcType=VARCHAR},
       </if>
       <if test="gmtCreate != null" >
         gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
@@ -169,7 +175,7 @@
       match_date = #{matchDate,jdbcType=DATE},
       guess_result = #{guessResult,jdbcType=VARCHAR},
       real_result = #{realResult,jdbcType=VARCHAR},
-      code = #{code,jdbcType=INTEGER},
+      code = #{code,jdbcType=VARCHAR},
       gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
       gmt_update = #{gmtUpdate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
