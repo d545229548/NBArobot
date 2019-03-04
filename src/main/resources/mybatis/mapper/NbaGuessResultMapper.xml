@@ -8,7 +8,7 @@
     <result column="guest_score" property="guestScore" jdbcType="VARCHAR" />
     <result column="home_team_name" property="homeTeamName" jdbcType="VARCHAR" />
     <result column="home_score" property="homeScore" jdbcType="VARCHAR" />
-    <result column="match_date" property="matchDate" jdbcType="DATE" />
+    <result column="match_date" property="matchDate" jdbcType="TIMESTAMP" />
     <result column="guess_result" property="guessResult" jdbcType="VARCHAR" />
     <result column="real_result" property="realResult" jdbcType="VARCHAR" />
     <result column="code" property="code" jdbcType="VARCHAR" />
@@ -22,33 +22,33 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from nba_guess_result
+    from nba_match_result
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectByMatchId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select
     <include refid="Base_Column_List" />
-    from nba_guess_result
+    from nba_match_result
     where match_id = #{matchId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from nba_guess_result
+    delete from nba_match_result
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.jiahui.nbarobot.domain.NbaGuessResult" >
-    insert into nba_guess_result (id, match_id, guest_team_name, 
+    insert into nba_match_result (id, match_id, guest_team_name, 
       guest_score, home_team_name, home_score, 
       match_date, guess_result, real_result, 
       code, gmt_create, gmt_update
       )
     values (#{id,jdbcType=INTEGER}, #{matchId,jdbcType=INTEGER}, #{guestTeamName,jdbcType=VARCHAR}, 
       #{guestScore,jdbcType=VARCHAR}, #{homeTeamName,jdbcType=VARCHAR}, #{homeScore,jdbcType=VARCHAR}, 
-      #{matchDate,jdbcType=DATE}, #{guessResult,jdbcType=VARCHAR}, #{realResult,jdbcType=VARCHAR}, 
+      #{matchDate,jdbcType=TIMESTAMP}, #{guessResult,jdbcType=VARCHAR}, #{realResult,jdbcType=VARCHAR}, 
       #{code,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtUpdate,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.jiahui.nbarobot.domain.NbaGuessResult" >
-    insert into nba_guess_result
+    insert into nba_match_result
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -107,7 +107,7 @@
         #{homeScore,jdbcType=VARCHAR},
       </if>
       <if test="matchDate != null" >
-        #{matchDate,jdbcType=DATE},
+        #{matchDate,jdbcType=TIMESTAMP},
       </if>
       <if test="guessResult != null" >
         #{guessResult,jdbcType=VARCHAR},
@@ -127,7 +127,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.jiahui.nbarobot.domain.NbaGuessResult" >
-    update nba_guess_result
+    update nba_match_result
     <set >
       <if test="matchId != null" >
         match_id = #{matchId,jdbcType=INTEGER},
@@ -145,7 +145,7 @@
         home_score = #{homeScore,jdbcType=VARCHAR},
       </if>
       <if test="matchDate != null" >
-        match_date = #{matchDate,jdbcType=DATE},
+        match_date = #{matchDate,jdbcType=TIMESTAMP},
       </if>
       <if test="guessResult != null" >
         guess_result = #{guessResult,jdbcType=VARCHAR},
@@ -166,13 +166,13 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.jiahui.nbarobot.domain.NbaGuessResult" >
-    update nba_guess_result
+    update nba_match_result
     set match_id = #{matchId,jdbcType=INTEGER},
       guest_team_name = #{guestTeamName,jdbcType=VARCHAR},
       guest_score = #{guestScore,jdbcType=VARCHAR},
       home_team_name = #{homeTeamName,jdbcType=VARCHAR},
       home_score = #{homeScore,jdbcType=VARCHAR},
-      match_date = #{matchDate,jdbcType=DATE},
+      match_date = #{matchDate,jdbcType=TIMESTAMP},
       guess_result = #{guessResult,jdbcType=VARCHAR},
       real_result = #{realResult,jdbcType=VARCHAR},
       code = #{code,jdbcType=VARCHAR},

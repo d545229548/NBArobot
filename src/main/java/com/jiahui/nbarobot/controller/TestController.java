@@ -4,7 +4,6 @@ import cn.hutool.json.JSONUtil;
 import com.jiahui.nbarobot.dao.NbaGuessResultMapper;
 import com.jiahui.nbarobot.domain.NbaGuessResult;
 import com.jiahui.nbarobot.service.NbaDataCopyService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +22,9 @@ public class TestController {
 
     @RequestMapping("/test")
     public String test(){
-        return JSONUtil.toJsonStr(nbaDataCopyService.copyNeteaseNbaMath());
+        nbaDataCopyService.copyNeteaseNbaStartMath();
+        nbaDataCopyService.copyNeteaseNbaResultMath();
+        return JSONUtil.toJsonStr("测试下");
     }
 
     @RequestMapping("/test1")

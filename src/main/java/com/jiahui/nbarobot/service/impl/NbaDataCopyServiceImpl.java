@@ -1,7 +1,6 @@
 package com.jiahui.nbarobot.service.impl;
 
 import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.jiahui.nbarobot.dao.NbaGuessResultMapper;
 import com.jiahui.nbarobot.domain.NbaGuessResult;
@@ -29,10 +28,10 @@ public class NbaDataCopyServiceImpl implements NbaDataCopyService{
     private Logger logger = LoggerFactory.getLogger(NbaDataCopyServiceImpl.class);
 
     @Override
-    public ResultVO copyNeteaseNbaMath(){
+    public ResultVO copyNeteaseNbaMath(String url){
         ResultVO resultVO = new ResultVO();
 
-        String result = HttpRequest.get("https://hongcai.163.com/api/front/matchInfo/getMatchResultList/2/0/20")
+        String result = HttpRequest.get(url)
                 .header("Content-Type","application/json;charset=UTF-8")
                 .header("Accept","*/*")
                 .header("User-Agent","RelotteryApp/6.8.0 iOS/12.1.2 (iPhone X)")
@@ -63,15 +62,20 @@ public class NbaDataCopyServiceImpl implements NbaDataCopyService{
                 Integer mathId = math.getMatchInfoId()*1000+1;
                 nbaGuessResult.setMatchId(mathId);
                 nbaGuessResult.setGuestTeamName(math.getGuestTeam().getTeamName());
-                nbaGuessResult.setGuestScore(String.valueOf(math.getGuestScore()));
+
                 nbaGuessResult.setHomeTeamName(math.getHomeTeam().getTeamName());
-                nbaGuessResult.setHomeScore(String.valueOf(math.getHomeScore()));
                 nbaGuessResult.setCode(math.getPlay().getConcede());
-                //主队比分减去客队比分>让分，代表主胜
-                if(math.getHomeScore() + Double.valueOf(math.getPlay().getConcede()) - math.getGuestScore() > 0){
-                    nbaGuessResult.setRealResult("W");
-                }else {
-                    nbaGuessResult.setRealResult("L");
+
+                //这里有层判断，时间大于当前时间，代表没有开赛，就不爬取比分和胜果
+                if(math.getTime() < System.currentTimeMillis()){
+                    nbaGuessResult.setGuestScore(String.valueOf(math.getGuestScore()));
+                    nbaGuessResult.setHomeScore(String.valueOf(math.getHomeScore()));
+                    //主队比分减去客队比分>让分，代表主胜
+                    if(math.getHomeScore() + Double.valueOf(math.getPlay().getConcede()) - math.getGuestScore() > 0){
+                        nbaGuessResult.setRealResult("W");
+                    }else {
+                        nbaGuessResult.setRealResult("L");
+                    }
                 }
                 nbaGuessResult.setGmtCreate(new Date());
                 nbaGuessResult.setMatchDate(new Date(math.getTime()));
@@ -89,6 +93,20 @@ public class NbaDataCopyServiceImpl implements NbaDataCopyService{
         resultVO.setMessage("爬取成功");
         resultVO.setSuccess(true);
         return resultVO;
+    }
+
+    @Override
+    public ResultVO copyNeteaseNbaResultMath(){
+        return this.copyNeteaseNbaMath(
+                "https://hongcai.163.com/api/front/matchInfo/getMatchResultList/2/0/20"
+        );
+    }
+
+    @Override
+    public ResultVO copyNeteaseNbaStartMath(){
+        return this.copyNeteaseNbaMath(
+                "https://hongcai.163.com/api/front/matchInfo/getRealTimeMatchList/2"
+        );
     }
 
 }
