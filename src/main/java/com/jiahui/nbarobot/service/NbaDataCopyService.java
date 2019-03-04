@@ -28,4 +28,6 @@ public interface NbaDataCopyService {
      */
     ResultVO copyNeteaseNbaStartMath();
 
+    ResultVO copyNeteaseNbaMatchReport(Integer matchId);
+
 }

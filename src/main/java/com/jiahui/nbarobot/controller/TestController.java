@@ -22,8 +22,7 @@ public class TestController {
 
     @RequestMapping("/test")
     public String test(){
-        nbaDataCopyService.copyNeteaseNbaStartMath();
-        nbaDataCopyService.copyNeteaseNbaResultMath();
+        nbaDataCopyService.copyNeteaseNbaMatchReport(351886001);
         return JSONUtil.toJsonStr("测试下");
     }
 

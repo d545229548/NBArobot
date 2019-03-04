@@ -10,7 +10,7 @@ import java.util.List;
  * @author dongjiahui
  */
 @Data
-public class NeteaseNbaMathResult {
+public class NeteaseNbaMatchResult {
 
 
     /**

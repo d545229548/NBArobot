@@ -21,7 +21,7 @@
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
                         connectionURL="jdbc:mysql://localhost:3306/NBA_robot?characterEncoding=UTF-8"
                         userId="root"
-                        password="19920831"/>
+                        password="asdfasdf"/>
 
         <!-- 指定javaBean生成的位置 -->
         <javaModelGenerator targetPackage="com.jiahui.nbarobot.domain" targetProject="src/main/java" >
@@ -42,8 +42,8 @@
         </javaClientGenerator>
 
         <!-- table表生成对应的DoaminObject -->
-        <table tableName="nba_guess_result"
-               domainObjectName="NbaGuessResult"
+        <table tableName="nba_guess_point_log"
+               domainObjectName="NbaGuessPointLog"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"

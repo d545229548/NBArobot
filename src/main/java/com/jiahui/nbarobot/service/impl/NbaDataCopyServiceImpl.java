@@ -1,13 +1,18 @@
 package com.jiahui.nbarobot.service.impl;
 
-import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson.JSON;
+import com.jiahui.nbarobot.dao.NbaGuessPointLogMapper;
 import com.jiahui.nbarobot.dao.NbaGuessResultMapper;
+import com.jiahui.nbarobot.domain.NbaGuessPointLog;
 import com.jiahui.nbarobot.domain.NbaGuessResult;
-import com.jiahui.nbarobot.domain.netease.NeteaseNbaMathResult;
-import com.jiahui.nbarobot.domain.netease.NeteaseNbaMathResult.DataBean.MatchListBean;
+import com.jiahui.nbarobot.domain.netease.NeteaseNbaMatchReport;
+import com.jiahui.nbarobot.domain.netease.NeteaseNbaMatchResult;
+import com.jiahui.nbarobot.domain.netease.NeteaseNbaMatchReport.DataBean.EventBean.GuestEventBean;
+import com.jiahui.nbarobot.domain.netease.NeteaseNbaMatchReport.DataBean.EventBean.HomeEventBean;
+import com.jiahui.nbarobot.domain.netease.NeteaseNbaMatchResult.DataBean.MatchListBean;
 import com.jiahui.nbarobot.domain.utils.ResultVO;
 import com.jiahui.nbarobot.service.NbaDataCopyService;
+import com.jiahui.nbarobot.utils.HttpRequestUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -24,36 +29,59 @@ public class NbaDataCopyServiceImpl implements NbaDataCopyService{
 
     @Resource
     private NbaGuessResultMapper nbaGuessResultMapper;
+    @Resource
+    private NbaGuessPointLogMapper nbaGuessPointLogMapper;
+
+    /**
+     * 情报来源于网易
+     */
+    private static final Integer NETNASESOURCEID = 1;
+
+    /**
+     * 情报type , 1 为主队得分 2 为客队得分
+     */
+    private static final String REPORTTYPEGUEST = "2";
+    private static final String REPORTTYPEHOME = "1";
 
     private Logger logger = LoggerFactory.getLogger(NbaDataCopyServiceImpl.class);
 
-    @Override
-    public ResultVO copyNeteaseNbaMath(String url){
+    public ResultVO copyNetease(String url,Object o){
         ResultVO resultVO = new ResultVO();
 
-        String result = HttpRequest.get(url)
-                .header("Content-Type","application/json;charset=UTF-8")
-                .header("Accept","*/*")
-                .header("User-Agent","RelotteryApp/6.8.0 iOS/12.1.2 (iPhone X)")
-                .execute().body();
-        logger.info("测试网易接口返回信息为 {}",result);
-        NeteaseNbaMathResult neteaseNbaMathResult;
+        String result = HttpRequestUtil.get(url);
         //将json系列成javabean
         try {
-            neteaseNbaMathResult = JSON.parseObject(result,NeteaseNbaMathResult.class);
-
+            o = JSON.parseObject(result,o.getClass());
+            resultVO.setSuccess(true);
+            resultVO.setMessage("系列化成功");
+            resultVO.setData(o);
         }catch (Exception e){
             e.printStackTrace();
             resultVO.setSuccess(false);
             resultVO.setMessage("网易接口系列化错误");
             return resultVO;
         }
-        if(neteaseNbaMathResult == null || neteaseNbaMathResult.getCode() != 200){
+        if(o == null){
             resultVO.setSuccess(false);
             resultVO.setMessage("网易接口返回错误");
+        }
+        return resultVO;
+    }
+
+    @Override
+    public ResultVO copyNeteaseNbaMath(String url){
+        ResultVO resultVO ;
+        NeteaseNbaMatchResult neteaseNbaMatchResult = new NeteaseNbaMatchResult();
+        resultVO = copyNetease(url,neteaseNbaMatchResult);
+        if(!resultVO.getSuccess()){
             return resultVO;
         }
-        List<MatchListBean> matchListBeans = neteaseNbaMathResult.getData().getMatchList();
+        neteaseNbaMatchResult = (NeteaseNbaMatchResult) resultVO.getData();
+        if(neteaseNbaMatchResult.getCode() != 200){
+            resultVO.setSuccess(false);
+            resultVO.setMessage("接口返回异常");
+        }
+        List<MatchListBean> matchListBeans = neteaseNbaMatchResult.getData().getMatchList();
         for(MatchListBean math : matchListBeans){
             //只爬取NBA的比赛
             if("NBA".equals(math.getLeagueMatch().getLeagueName())){
@@ -107,6 +135,60 @@ public class NbaDataCopyServiceImpl implements NbaDataCopyService{
         return this.copyNeteaseNbaMath(
                 "https://hongcai.163.com/api/front/matchInfo/getRealTimeMatchList/2"
         );
+    }
+
+    @Override
+    public ResultVO copyNeteaseNbaMatchReport(Integer matchId){
+        ResultVO resultVO ;
+        //针对网易的match_id转换下
+        String url = "https://hongcai.163.com/api/front/matchInfo/getMatchReport/" + (matchId - 1)/1000;
+        NeteaseNbaMatchReport nbaMatchReport = new NeteaseNbaMatchReport();
+        resultVO = copyNetease(url,nbaMatchReport);
+        if(!resultVO.getSuccess()){
+            return resultVO;
+        }
+        nbaMatchReport = (NeteaseNbaMatchReport) resultVO.getData();
+        if(nbaMatchReport.getCode() != 200 || nbaMatchReport.getData() == null){
+            resultVO.setSuccess(false);
+            resultVO.setMessage("接口返回异常或者该比赛无情报信息");
+        }
+
+        for(GuestEventBean guestEventBean : nbaMatchReport.getData().getEvent().getGuestEvent()){
+            NbaGuessPointLog pointLog = new NbaGuessPointLog();
+            pointLog.setMatchId(matchId);
+            pointLog.setGmtCreate(new Date());
+            //type 主队得分 1  客队得分 2
+            pointLog.setType(REPORTTYPEGUEST);
+            //优势加分，劣势减分
+            if(guestEventBean.getUpDown() == 0){
+                pointLog.setPoint("10");
+            }else if(guestEventBean.getUpDown() == 1){
+                pointLog.setPoint("-10");
+            }
+            pointLog.setDesc(guestEventBean.getTitle());
+            //1 表示情报来源于网易，以后用枚举表示
+            pointLog.setSourceId(NETNASESOURCEID);
+            nbaGuessPointLogMapper.insertSelective(pointLog);
+        }
+        for(HomeEventBean homeEventBean : nbaMatchReport.getData().getEvent().getHomeEvent()){
+            NbaGuessPointLog pointLog = new NbaGuessPointLog();
+            pointLog.setMatchId(matchId);
+            pointLog.setGmtCreate(new Date());
+            //type 主队得分 1  客队得分 2
+            pointLog.setType(REPORTTYPEHOME);
+            //优势加分，劣势减分
+            if(homeEventBean.getUpDown() == 0){
+                pointLog.setPoint("10");
+            }else if(homeEventBean.getUpDown() == 1){
+                pointLog.setPoint("-10");
+            }
+            pointLog.setDesc(homeEventBean.getTitle());
+            //1 表示情报来源于网易，以后用枚举表示
+            pointLog.setSourceId(NETNASESOURCEID);
+            nbaGuessPointLogMapper.insertSelective(pointLog);
+        }
+
+        return resultVO;
     }
 
 }

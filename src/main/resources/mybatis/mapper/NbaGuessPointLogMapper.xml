@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiahui.nbarobot.dao.NbaGuessPointLogMapper">
+  <resultMap id="BaseResultMap" type="com.jiahui.nbarobot.domain.NbaGuessPointLog">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="match_id" jdbcType="INTEGER" property="matchId" />
+    <result column="point" jdbcType="VARCHAR" property="point" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="source_id" jdbcType="INTEGER" property="sourceId" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_update" jdbcType="TIMESTAMP" property="gmtUpdate" />
+  </resultMap>
+  <insert id="insert" parameterType="com.jiahui.nbarobot.domain.NbaGuessPointLog">
+    insert into nba_guess_point_log (id, match_id, point, 
+      `type`, `desc`, source_id,
+      gmt_create, gmt_update)
+    values (#{id,jdbcType=INTEGER}, #{matchId,jdbcType=INTEGER}, #{point,jdbcType=VARCHAR}, 
+      #{type,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR}, #{sourceId,jdbcType=INTEGER}, 
+      #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtUpdate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jiahui.nbarobot.domain.NbaGuessPointLog">
+    insert into nba_guess_point_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="matchId != null">
+        match_id,
+      </if>
+      <if test="point != null">
+        point,
+      </if>
+      <if test="type != null">
+        `type`,
+      </if>
+      <if test="desc != null">
+        `desc`,
+      </if>
+      <if test="sourceId != null">
+        source_id,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+      <if test="gmtUpdate != null">
+        gmt_update,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="matchId != null">
+        #{matchId,jdbcType=INTEGER},
+      </if>
+      <if test="point != null">
+        #{point,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="desc != null">
+        #{desc,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceId != null">
+        #{sourceId,jdbcType=INTEGER},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtUpdate != null">
+        #{gmtUpdate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+</mapper>
