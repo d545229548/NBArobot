@@ -190,5 +190,13 @@ public class NbaDataCopyServiceImpl implements NbaDataCopyService{
 
         return resultVO;
     }
+    public class Pig{
+        public void sayHello(){
+            logger.info("现在"+Pig.class+"开始准备say hello");
+            System.out.println("hello");
+        }
+    }
+
+
 
 }

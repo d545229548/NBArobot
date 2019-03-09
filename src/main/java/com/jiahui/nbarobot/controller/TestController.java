@@ -28,9 +28,8 @@ public class TestController {
 
     @RequestMapping("/test1")
     public String test1(){
-        NbaGuessResult nbaGuessResult = new NbaGuessResult();
-        nbaGuessResult.setCode("323");
-        nbaGuessResultMapper.insertSelective(nbaGuessResult);
+        nbaDataCopyService.copyNeteaseNbaResultMath();
+        nbaDataCopyService.copyNeteaseNbaStartMath();
         return "2eee23223322";
     }
 
