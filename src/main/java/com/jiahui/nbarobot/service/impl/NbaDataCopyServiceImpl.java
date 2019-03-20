@@ -92,10 +92,12 @@ public class NbaDataCopyServiceImpl implements NbaDataCopyService{
                 nbaGuessResult.setGuestTeamName(math.getGuestTeam().getTeamName());
 
                 nbaGuessResult.setHomeTeamName(math.getHomeTeam().getTeamName());
-                nbaGuessResult.setCode(math.getPlay().getConcede());
+                if(math.getPlay()  != null){
+                    nbaGuessResult.setCode(math.getPlay().getConcede());
+                }
 
                 //这里有层判断，时间大于当前时间，代表没有开赛，就不爬取比分和胜果
-                if(math.getTime() < System.currentTimeMillis()){
+                if(math.getTime() < System.currentTimeMillis() && math.getPlay() != null){
                     nbaGuessResult.setGuestScore(String.valueOf(math.getGuestScore()));
                     nbaGuessResult.setHomeScore(String.valueOf(math.getHomeScore()));
                     //主队比分减去客队比分>让分，代表主胜
