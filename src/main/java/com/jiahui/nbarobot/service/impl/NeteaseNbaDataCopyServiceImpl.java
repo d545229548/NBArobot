@@ -1,6 +1,6 @@
 package com.jiahui.nbarobot.service.impl;
 
-import com.alibaba.fastjson.JSON;
+
 import com.jiahui.nbarobot.dao.NbaGuessPointLogMapper;
 import com.jiahui.nbarobot.dao.NbaGuessResultMapper;
 import com.jiahui.nbarobot.domain.NbaGuessPointLog;
@@ -11,7 +11,7 @@ import com.jiahui.nbarobot.domain.netease.NeteaseNbaMatchReport.DataBean.EventBe
 import com.jiahui.nbarobot.domain.netease.NeteaseNbaMatchReport.DataBean.EventBean.HomeEventBean;
 import com.jiahui.nbarobot.domain.netease.NeteaseNbaMatchResult.DataBean.MatchListBean;
 import com.jiahui.nbarobot.domain.utils.ResultVO;
-import com.jiahui.nbarobot.service.NbaDataCopyService;
+import com.jiahui.nbarobot.service.NeteaseNbaDataCopyService;
 import com.jiahui.nbarobot.utils.HttpRequestUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ import java.util.List;
  * @author dongjiahui
  */
 @Service(value = "NbaDataCopyService")
-public class NbaDataCopyServiceImpl implements NbaDataCopyService{
+public class NeteaseNbaDataCopyServiceImpl implements NeteaseNbaDataCopyService {
 
     @Resource
     private NbaGuessResultMapper nbaGuessResultMapper;
@@ -43,36 +43,15 @@ public class NbaDataCopyServiceImpl implements NbaDataCopyService{
     private static final String REPORTTYPEGUEST = "2";
     private static final String REPORTTYPEHOME = "1";
 
-    private Logger logger = LoggerFactory.getLogger(NbaDataCopyServiceImpl.class);
+    private Logger logger = LoggerFactory.getLogger(NeteaseNbaDataCopyServiceImpl.class);
 
-    public ResultVO copyNetease(String url,Object o){
-        ResultVO resultVO = new ResultVO();
 
-        String result = HttpRequestUtil.get(url);
-        //将json系列成javabean
-        try {
-            o = JSON.parseObject(result,o.getClass());
-            resultVO.setSuccess(true);
-            resultVO.setMessage("系列化成功");
-            resultVO.setData(o);
-        }catch (Exception e){
-            e.printStackTrace();
-            resultVO.setSuccess(false);
-            resultVO.setMessage("网易接口系列化错误");
-            return resultVO;
-        }
-        if(o == null){
-            resultVO.setSuccess(false);
-            resultVO.setMessage("网易接口返回错误");
-        }
-        return resultVO;
-    }
 
     @Override
     public ResultVO copyNeteaseNbaMath(String url){
         ResultVO resultVO ;
         NeteaseNbaMatchResult neteaseNbaMatchResult = new NeteaseNbaMatchResult();
-        resultVO = copyNetease(url,neteaseNbaMatchResult);
+        resultVO = HttpRequestUtil.copy(url,neteaseNbaMatchResult);
         if(!resultVO.getSuccess()){
             return resultVO;
         }
@@ -145,7 +124,7 @@ public class NbaDataCopyServiceImpl implements NbaDataCopyService{
         //针对网易的match_id转换下
         String url = "https://hongcai.163.com/api/front/matchInfo/getMatchReport/" + (matchId - 1)/1000;
         NeteaseNbaMatchReport nbaMatchReport = new NeteaseNbaMatchReport();
-        resultVO = copyNetease(url,nbaMatchReport);
+        resultVO = HttpRequestUtil.copy(url,nbaMatchReport);
         if(!resultVO.getSuccess()){
             return resultVO;
         }
@@ -192,12 +171,7 @@ public class NbaDataCopyServiceImpl implements NbaDataCopyService{
 
         return resultVO;
     }
-    public class Pig{
-        public void sayHello(){
-            logger.info("现在"+Pig.class+"开始准备say hello");
-            System.out.println("hello");
-        }
-    }
+
 
 
 

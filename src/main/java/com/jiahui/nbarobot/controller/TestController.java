@@ -2,8 +2,7 @@ package com.jiahui.nbarobot.controller;
 
 import cn.hutool.json.JSONUtil;
 import com.jiahui.nbarobot.dao.NbaGuessResultMapper;
-import com.jiahui.nbarobot.domain.NbaGuessResult;
-import com.jiahui.nbarobot.service.NbaDataCopyService;
+import com.jiahui.nbarobot.service.NeteaseNbaDataCopyService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,7 +15,7 @@ import javax.annotation.Resource;
 public class TestController {
 
     @Resource
-    private NbaDataCopyService nbaDataCopyService;
+    private NeteaseNbaDataCopyService nbaDataCopyService;
     @Resource
     private NbaGuessResultMapper nbaGuessResultMapper;
 
