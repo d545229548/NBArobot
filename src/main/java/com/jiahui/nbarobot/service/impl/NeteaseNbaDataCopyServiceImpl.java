@@ -51,7 +51,7 @@ public class NeteaseNbaDataCopyServiceImpl implements NeteaseNbaDataCopyService 
     public ResultVO copyNeteaseNbaMath(String url){
         ResultVO resultVO ;
         NeteaseNbaMatchResult neteaseNbaMatchResult = new NeteaseNbaMatchResult();
-        resultVO = HttpRequestUtil.copy(url,neteaseNbaMatchResult);
+        resultVO = HttpRequestUtil.copy(url,neteaseNbaMatchResult,1,null);
         if(!resultVO.getSuccess()){
             return resultVO;
         }
@@ -124,7 +124,7 @@ public class NeteaseNbaDataCopyServiceImpl implements NeteaseNbaDataCopyService 
         //针对网易的match_id转换下
         String url = "https://hongcai.163.com/api/front/matchInfo/getMatchReport/" + (matchId - 1)/1000;
         NeteaseNbaMatchReport nbaMatchReport = new NeteaseNbaMatchReport();
-        resultVO = HttpRequestUtil.copy(url,nbaMatchReport);
+        resultVO = HttpRequestUtil.copy(url,nbaMatchReport,1,null);
         if(!resultVO.getSuccess()){
             return resultVO;
         }

@@ -6,20 +6,41 @@ import com.jiahui.nbarobot.domain.utils.ResultVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+
 /**
  * @author dongjiahui
  */
 public class HttpRequestUtil {
 
     private static Logger logger = LoggerFactory.getLogger(HttpRequestUtil.class);
+    private static String contType ="application/json;charset=UTF-8";
+    private static String accept = "*/*";
+    private static String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0)" +
+            " AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36";
+
+
 
     public static String get(String url){
         String result= HttpRequest.get(url)
-                .header("Content-Type","application/json;charset=UTF-8")
-                .header("Accept","*/*")
-                .header("User-Agent","RelotteryApp/6.8.0 iOS/12.1.2 (iPhone X)")
+                .header("Content-Type",contType)
+                .header("Accept",accept)
+                .header("User-Agent",userAgent)
                 .execute().body();
-        logger.info("接口 {} 的返回值为 {}",url,result);
+        logger.info("get接口 {} 的返回值为 {}",url,result);
+        return result;
+
+    }
+
+
+    public static String post(String url,Map paramMap){
+        String result= HttpRequest.get(url)
+                .header("Content-Type",contType)
+                .header("Accept",accept)
+                .header("User-Agent",userAgent)
+                .form(paramMap)
+                .execute().body();
+        logger.info("post接口 {} 的返回值为 {} 入参为 {}",url,result,paramMap.toString());
         return result;
 
     }
@@ -28,12 +49,17 @@ public class HttpRequestUtil {
      * 爬取公共方法
      * @param url url
      * @param o 转换的javabean
+     * @param type 1 get 2 post
      * @return 结果
      */
-    public static ResultVO copy(String url, Object o){
+    public static ResultVO copy(String url, Object o,Integer type,Map paramMap){
         ResultVO resultVO = new ResultVO();
-
-        String result = HttpRequestUtil.get(url);
+        String result;
+        if(type == 1){
+            result = HttpRequestUtil.get(url);
+        }else {
+            result = HttpRequestUtil.post(url,paramMap);
+        }
         //将json系列成javabean
         try {
             o = JSON.parseObject(result,o.getClass());

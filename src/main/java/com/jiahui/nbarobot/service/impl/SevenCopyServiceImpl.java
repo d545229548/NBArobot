@@ -21,7 +21,7 @@ public class SevenCopyServiceImpl implements SevenCopyService{
         SevenNbaMatchResult sevenNbaMatchResult = new SevenNbaMatchResult();
         String url = "https://mobi.7m.com.cn/bdata/result/" + date + "/gb.json";
         String oddsUrl = "https://mobi.7m.com.cn/bdata/result/"+ date +"/odds1.json";
-        ResultVO resultVO = HttpRequestUtil.copy(url,sevenNbaMatchResult);
+        ResultVO resultVO = HttpRequestUtil.copy(url,sevenNbaMatchResult,1,null);
         sevenNbaMatchResult = (SevenNbaMatchResult) resultVO.getData();
         for(List<String> match:sevenNbaMatchResult.getMatchs()){
             NbaGuessResult nbaGuessResult = new NbaGuessResult();
