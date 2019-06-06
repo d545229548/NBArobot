@@ -19,7 +19,7 @@
         <!-- 必须要有的，使用这个配置链接数据库
             -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/NBA_robot?characterEncoding=UTF-8"
+                        connectionURL="jdbc:mysql://124.156.105.233:3306/NBA_robot?characterEncoding=UTF-8"
                         userId="root"
                         password="asdfasdf"/>
 
@@ -42,8 +42,8 @@
         </javaClientGenerator>
 
         <!-- table表生成对应的DoaminObject -->
-        <table tableName="nba_guess_point_log"
-               domainObjectName="NbaGuessPointLog"
+        <table tableName="week_question"
+               domainObjectName="WeekQuestion"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"

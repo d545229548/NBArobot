@@ -1,4 +1,4 @@
-package com.jiahui.nbarobot.service.impl.wxrobotservicei;
+package com.jiahui.nbarobot.service.impl.wxrobotservice;
 
 import com.jiahui.nbarobot.domain.wx.WxBaseRequest;
 import com.jiahui.nbarobot.utils.HttpRequestUtil;
@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Timer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
