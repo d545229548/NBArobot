@@ -36,4 +36,13 @@ public class ApiDingdingController {
         DingtalkMessage message = dingdingService.ai(request);
         return message.toJsonString();
     }
+
+    @RequestMapping(value = "/to/qc",produces="application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public String toQc(@RequestBody CallbackRequest request){
+
+        logger.info("qc 接收到机器人信息:" +request.toString());
+        DingtalkMessage message = dingdingService.ai(request);
+        return message.toJsonString();
+    }
 }

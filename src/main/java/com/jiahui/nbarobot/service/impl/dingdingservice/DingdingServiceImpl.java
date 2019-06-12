@@ -1,19 +1,17 @@
 package com.jiahui.nbarobot.service.impl.dingdingservice;
 
+import com.alibaba.fastjson.JSON;
 import com.jiahui.nbarobot.dao.WeekQuestionMapper;
 import com.jiahui.nbarobot.domain.WeekQuestion;
 import com.jiahui.nbarobot.domain.dingding.CallbackRequest;
 import com.jiahui.nbarobot.domain.dingding.DingtalkMessage;
 import com.jiahui.nbarobot.domain.dingding.TextMessage;
 import com.jiahui.nbarobot.service.dingdingservice.DingdingService;
+import com.jiahui.nbarobot.utils.HttpRequestUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
+import java.util.*;
 
 
 /**
@@ -24,6 +22,13 @@ public class DingdingServiceImpl implements DingdingService{
 
     @Resource
     private WeekQuestionMapper weekQuestionMapper;
+
+
+    @Override
+    public String toQc(CallbackRequest request){
+        Map param = JSON.parseObject(request.toString(),Map.class);
+        return HttpRequestUtil.post("http://www.djhbaby.club:8080/api/robot/callback/qc",param);
+    }
 
     @Override
     public DingtalkMessage ai(CallbackRequest request){

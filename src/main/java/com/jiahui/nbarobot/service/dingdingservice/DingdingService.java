@@ -12,4 +12,6 @@ public interface DingdingService {
      * @return 钉钉消息接口
      */
     DingtalkMessage ai(CallbackRequest request);
+
+    String toQc(CallbackRequest request);
 }
