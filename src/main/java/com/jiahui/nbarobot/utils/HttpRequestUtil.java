@@ -34,7 +34,7 @@ public class HttpRequestUtil {
 
 
     public static String post(String url,Map paramMap){
-        String result= HttpRequest.get(url)
+        String result= HttpRequest.post(url)
                 .header("Content-Type",contType)
                 .header("Accept",accept)
                 .header("User-Agent",userAgent)
