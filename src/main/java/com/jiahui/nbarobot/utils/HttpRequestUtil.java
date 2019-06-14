@@ -42,7 +42,17 @@ public class HttpRequestUtil {
                 .execute().body();
         logger.info("post接口 {} 的返回值为 {} 入参为 {}",url,result,paramMap.toString());
         return result;
+    }
 
+    public static String postJson(String url,String json){
+        String result= HttpRequest.post(url)
+                .header("Content-Type",contType)
+                .header("Accept",accept)
+                .header("User-Agent",userAgent)
+                .body(json)
+                .execute().body();
+        logger.info("post接口 {} 的返回值为 {} 入参为 {}",url,result,json);
+        return result;
     }
 
     /**

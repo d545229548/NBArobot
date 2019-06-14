@@ -26,8 +26,8 @@ public class DingdingServiceImpl implements DingdingService{
 
     @Override
     public String toQc(CallbackRequest request){
-        Map param = JSON.parseObject(JSON.toJSONString(request),Map.class);
-        return HttpRequestUtil.post("http://www.djhbaby.club:8080/api/robot/callback/qc",param);
+        String json = JSON.toJSONString(request);
+        return HttpRequestUtil.postJson("http://www.djhbaby.club:8080/api/robot/callback/qc",json);
     }
 
     @Override
