@@ -6,7 +6,9 @@ import com.jiahui.nbarobot.domain.WeekQuestion;
 import com.jiahui.nbarobot.domain.dingding.CallbackRequest;
 import com.jiahui.nbarobot.domain.dingding.DingtalkMessage;
 import com.jiahui.nbarobot.domain.dingding.TextMessage;
+import com.jiahui.nbarobot.domain.gamble.amount.UserWinLoseInfo;
 import com.jiahui.nbarobot.service.dingdingservice.DingdingService;
+import com.jiahui.nbarobot.service.gambleservice.amount.GableAmountService;
 import com.jiahui.nbarobot.utils.HttpRequestUtil;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,8 @@ public class DingdingServiceImpl implements DingdingService{
 
     @Resource
     private WeekQuestionMapper weekQuestionMapper;
+    @Resource
+    private GableAmountService gableAmountService;
 
 
     @Override
@@ -41,12 +45,81 @@ public class DingdingServiceImpl implements DingdingService{
         else if(content.contains("每周一问")){
             message = getWeekQuestion(request);
         }
+        //判断是否进入指令模式
+        else if(content.contains("[") && content.contains("]")){
+            message = command(request);
+        }
         else {
             message = new TextMessage(request.getSenderNick() + "我没听懂你的意思,所以你是🐷");
         }
         return message;
 
     }
+
+
+    private DingtalkMessage command(CallbackRequest request){
+        DingtalkMessage message;
+
+        String content = request.getContext();
+        //指令名称
+        String commandName;
+        //指令详情
+        String command;
+
+        //解析指令
+        try {
+            commandName = content.substring(0,content.indexOf("["));
+            command = content.substring(content.indexOf("["),content.indexOf("]"));
+        }catch (Exception e){
+            message = new TextMessage("解析指令出现异常，异常信息为 -- " + e);
+            return message;
+        }
+
+        if(!command.contains(",")){
+            message = new TextMessage("指令解析失败,未包含,");
+            return message;
+        }
+
+        if("记录盈亏".equals(commandName)){
+            return gableAmountCommand(command,request);
+        }else {
+            return new TextMessage("目前未包含该指令");
+        }
+
+    }
+
+    private DingtalkMessage gableAmountCommand(String command,CallbackRequest request){
+        DingtalkMessage message;
+        String[] list = command.split(",");
+
+        if(list.length < 2 || list.length > 3){
+            return new TextMessage("指令解析失败,size不为2或者3");
+        }
+
+        UserWinLoseInfo userWinLoseInfo = new UserWinLoseInfo();
+        userWinLoseInfo.setCreateTime(new Date());
+        userWinLoseInfo.setSource(list[0]);
+        try {
+            Double amount = Double.valueOf(list[1]);
+            userWinLoseInfo.setAmt(amount);
+            if(amount > 0 ){
+                userWinLoseInfo.setResult("win");
+            }else {
+                userWinLoseInfo.setResult("lost");
+            }
+        }catch (Exception e){
+            return new TextMessage("金额解析异常");
+        }
+        userWinLoseInfo.setUser(request.getSenderNick());
+        if(list.length == 3){
+            userWinLoseInfo.setDesc(list[2]);
+        }
+        gableAmountService.addLog(userWinLoseInfo);
+        return new TextMessage("记录成功");
+    }
+
+
+
 
     private DingtalkMessage addWeekQuestion(CallbackRequest request){
         DingtalkMessage message;
