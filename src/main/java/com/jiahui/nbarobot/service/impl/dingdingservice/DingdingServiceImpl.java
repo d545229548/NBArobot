@@ -27,6 +27,8 @@ public class DingdingServiceImpl implements DingdingService{
     @Resource
     private GableAmountService gableAmountService;
 
+    private static DingtalkMessage commandTemplate = new TextMessage("记录盈亏[来源,金额,简介]");
+
 
     @Override
     public String toQc(CallbackRequest request){
