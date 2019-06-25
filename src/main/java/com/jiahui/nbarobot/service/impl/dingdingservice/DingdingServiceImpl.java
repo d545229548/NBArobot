@@ -9,6 +9,7 @@ import com.jiahui.nbarobot.domain.dingding.TextMessage;
 import com.jiahui.nbarobot.domain.gamble.amount.UserWinLoseInfo;
 import com.jiahui.nbarobot.service.dingdingservice.DingdingService;
 import com.jiahui.nbarobot.service.gambleservice.amount.GableAmountService;
+import com.jiahui.nbarobot.utils.ExceptionUtil;
 import com.jiahui.nbarobot.utils.HttpRequestUtil;
 import org.springframework.stereotype.Service;
 
@@ -62,7 +63,7 @@ public class DingdingServiceImpl implements DingdingService{
     private DingtalkMessage command(CallbackRequest request){
         DingtalkMessage message;
 
-        String content = request.getContext();
+        String content = request.getText().getContent();
         //指令名称
         String commandName;
         //指令详情
@@ -73,7 +74,7 @@ public class DingdingServiceImpl implements DingdingService{
             commandName = content.substring(0,content.indexOf("["));
             command = content.substring(content.indexOf("["),content.indexOf("]"));
         }catch (Exception e){
-            message = new TextMessage("解析指令出现异常，异常信息为 -- " + e);
+            message = new TextMessage("解析指令出现异常，异常信息为 -- " + ExceptionUtil.getTrace(e));
             return message;
         }
 
@@ -180,5 +181,14 @@ public class DingdingServiceImpl implements DingdingService{
         return paramWeek == currentWeek;
     }
 
+
+    public static void main(String[] args){
+        CallbackRequest callbackRequest = new CallbackRequest();
+        CallbackRequest.TextBean textBean = new CallbackRequest.TextBean();
+        callbackRequest.setText(textBean);
+        textBean.setContent("记录盈亏[公众号足球,78.75,阿根廷赢了]");
+        DingdingServiceImpl dingdingService = new DingdingServiceImpl();
+        dingdingService.command(callbackRequest);
+    }
 
 }
