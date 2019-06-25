@@ -72,7 +72,7 @@ public class DingdingServiceImpl implements DingdingService{
         //解析指令
         try {
             commandName = content.substring(0,content.indexOf("["));
-            command = content.substring(content.indexOf("["),content.indexOf("]"));
+            command = content.substring(content.indexOf("[")+1,content.indexOf("]"));
         }catch (Exception e){
             message = new TextMessage("解析指令出现异常，异常信息为 -- " + ExceptionUtil.getTrace(e));
             return message;
@@ -83,7 +83,7 @@ public class DingdingServiceImpl implements DingdingService{
             return message;
         }
 
-        if("记录盈亏".equals(commandName)){
+        if(commandName.contains("记录盈亏")){
             return gableAmountCommand(command,request);
         }else {
             return new TextMessage("目前未包含该指令");
