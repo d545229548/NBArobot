@@ -11,7 +11,7 @@
     <result column="desc" property="desc" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, source, result, amt, create_time, user, desc
+    id, source, result, amt, create_time, `user`, `desc`
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select
@@ -25,8 +25,8 @@
   </delete>
   <insert id="insert" parameterType="com.jiahui.nbarobot.domain.gamble.amount.UserWinLoseInfo" >
     insert into user_win_lose_info (id, source, result,
-      amt, create_time, user,
-      desc)
+      amt, create_time, `user`,
+      `desc`)
     values (#{id,jdbcType=INTEGER}, #{source,jdbcType=VARCHAR}, #{result,jdbcType=VARCHAR},
       #{amt,jdbcType=DOUBLE}, #{createTime,jdbcType=TIMESTAMP}, #{user,jdbcType=VARCHAR},
       #{desc,jdbcType=VARCHAR})
@@ -50,10 +50,10 @@
         create_time,
       </if>
       <if test="user != null" >
-        user,
+        `user`,
       </if>
       <if test="desc != null" >
-        desc,
+        `desc`,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -96,10 +96,10 @@
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="user != null" >
-        user = #{user,jdbcType=VARCHAR},
+        `user` = #{user,jdbcType=VARCHAR},
       </if>
       <if test="desc != null" >
-        desc = #{desc,jdbcType=VARCHAR},
+        `desc` = #{desc,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -110,8 +110,8 @@
       result = #{result,jdbcType=VARCHAR},
       amt = #{amt,jdbcType=DOUBLE},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      user = #{user,jdbcType=VARCHAR},
-      desc = #{desc,jdbcType=VARCHAR}
+      `user` = #{user,jdbcType=VARCHAR},
+      `desc` = #{desc,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
