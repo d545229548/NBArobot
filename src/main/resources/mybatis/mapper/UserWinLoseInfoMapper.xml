@@ -14,7 +14,7 @@
     id, source, result, amt, create_time, user, desc
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from user_win_lose_info
     where id = #{id,jdbcType=INTEGER}
@@ -24,11 +24,11 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.jiahui.nbarobot.domain.gamble.amount.UserWinLoseInfo" >
-    insert into user_win_lose_info (id, source, result, 
-      amt, create_time, user, 
+    insert into user_win_lose_info (id, source, result,
+      amt, create_time, user,
       desc)
-    values (#{id,jdbcType=INTEGER}, #{source,jdbcType=VARCHAR}, #{result,jdbcType=VARCHAR}, 
-      #{amt,jdbcType=DOUBLE}, #{createTime,jdbcType=TIMESTAMP}, #{user,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{source,jdbcType=VARCHAR}, #{result,jdbcType=VARCHAR},
+      #{amt,jdbcType=DOUBLE}, #{createTime,jdbcType=TIMESTAMP}, #{user,jdbcType=VARCHAR},
       #{desc,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jiahui.nbarobot.domain.gamble.amount.UserWinLoseInfo" >
