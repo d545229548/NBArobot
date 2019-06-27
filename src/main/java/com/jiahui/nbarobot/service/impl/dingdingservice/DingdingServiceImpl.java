@@ -80,10 +80,6 @@ public class DingdingServiceImpl implements DingdingService{
             return message;
         }
 
-        if(!command.contains(",")){
-            message = new TextMessage("指令解析失败,未包含,");
-            return message;
-        }
 
         if(commandName.contains("记录盈亏")){
             return gableAmountCommand(command,request);
@@ -104,15 +100,22 @@ public class DingdingServiceImpl implements DingdingService{
         MarkdownMessage message = new MarkdownMessage();
         message.setTitle(request.getSenderNick() + "**盈亏记录**");
         AmountVO amountVO = gableAmountService.getAmount();
-        message.add("您的总盈亏金额：<font color=#3333ff>"+ amountVO.getWinAmount() + "</font>");
-        message.add("您的总胜率：<font color=#3333ff>"+ amountVO.getWinPer() + "</font>");
-        message.add("您的本月盈亏金额：<font color=#3333ff>"+ amountVO.getMonthsWinAmount() + "</font>");
-        message.add("您的本月胜率：<font color=#3333ff>"+ amountVO.getMonthsWinPer() + "</font>");
-        message.add("您的本周盈亏金额：<font color=#3333ff>"+ amountVO.getWeekWinAmount() + "</font>");
-        message.add("您的本周胜率：<font color=#3333ff>"+ amountVO.getWeekWinPer() + "</font>");
+        message.add("# **盈亏记录**");
+        message.add("### 您的总盈亏金额：<font color=#FF0000>"+ amountVO.getWinAmount() + "</font>");
+        message.add("### 您的总胜率：<font color=#FF0000>"+ amountVO.getWinPer() + "</font>");
+        message.add("### 您的本月盈亏金额：<font color=#FF0000>"+ amountVO.getMonthsWinAmount() + "</font>");
+        message.add("### 您的本月胜率：<font color=#FF0000>"+ amountVO.getMonthsWinPer() + "</font>");
+        message.add("### 您的本周盈亏金额：<font color=#FF0000>"+ amountVO.getWeekWinAmount() + "</font>");
+        message.add("### 您的本周胜率：<font color=#FF0000>"+ amountVO.getWeekWinPer() + "</font>");
         message.add("您的最近五笔记录如下：");
         for(UserWinLoseInfo log :amountVO.getLogs()){
-            message.add("- " + log.getResult() + "," + log.getAmt() + "," + log.getSource());
+            String result;
+            if("win".equals(log.getResult())){
+                result = "<font color=#FF0000>win</font>";
+            }else {
+                result = "<font color=#00FF00>lose</font>";
+            }
+            message.add("- " + result + "," + log.getAmt() + "," + log.getSource());
         }
 
         return message;

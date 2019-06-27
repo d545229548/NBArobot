@@ -21,6 +21,12 @@ public class DateUtil {
         try {
             cal.setTime(date);
             cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+            //将小时至0
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            //将分钟至0
+            cal.set(Calendar.MINUTE, 0);
+            //将秒至0
+            cal.set(Calendar.SECOND,0);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -36,6 +42,12 @@ public class DateUtil {
         Calendar cale = Calendar.getInstance();
         cale.add(Calendar.MONTH, 0);
         cale.set(Calendar.DAY_OF_MONTH, 1);
+        //将小时至0
+        cale.set(Calendar.HOUR_OF_DAY, 0);
+        //将分钟至0
+        cale.set(Calendar.MINUTE, 0);
+        //将秒至0
+        cale.set(Calendar.SECOND,0);
         return cale.getTime();
     }
 
