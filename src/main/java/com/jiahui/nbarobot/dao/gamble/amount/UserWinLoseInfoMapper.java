@@ -1,6 +1,10 @@
 package com.jiahui.nbarobot.dao.gamble.amount;
 
 import com.jiahui.nbarobot.domain.gamble.amount.UserWinLoseInfo;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.Date;
+import java.util.List;
 
 public interface UserWinLoseInfoMapper {
     int deleteByPrimaryKey(Integer id);
@@ -14,4 +18,10 @@ public interface UserWinLoseInfoMapper {
     int updateByPrimaryKeySelective(UserWinLoseInfo record);
 
     int updateByPrimaryKey(UserWinLoseInfo record);
+
+    List<UserWinLoseInfo> getAllLogs();
+
+    List<UserWinLoseInfo> getLastLogs(Integer n);
+
+    List<UserWinLoseInfo> getByDate(@Param("startDate") Date startDate,@Param("endDate") Date endDate);
 }

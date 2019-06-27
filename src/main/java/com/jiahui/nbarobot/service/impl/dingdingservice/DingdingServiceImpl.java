@@ -5,7 +5,9 @@ import com.jiahui.nbarobot.dao.WeekQuestionMapper;
 import com.jiahui.nbarobot.domain.WeekQuestion;
 import com.jiahui.nbarobot.domain.dingding.CallbackRequest;
 import com.jiahui.nbarobot.domain.dingding.DingtalkMessage;
+import com.jiahui.nbarobot.domain.dingding.MarkdownMessage;
 import com.jiahui.nbarobot.domain.dingding.TextMessage;
+import com.jiahui.nbarobot.domain.gamble.amount.AmountVO;
 import com.jiahui.nbarobot.domain.gamble.amount.UserWinLoseInfo;
 import com.jiahui.nbarobot.service.dingdingservice.DingdingService;
 import com.jiahui.nbarobot.service.gambleservice.amount.GableAmountService;
@@ -85,9 +87,38 @@ public class DingdingServiceImpl implements DingdingService{
 
         if(commandName.contains("记录盈亏")){
             return gableAmountCommand(command,request);
+        }else if(commandName.contains("查询盈亏")){
+            return selectAmountCommand(command,request);
         }else {
             return new TextMessage("目前未包含该指令");
         }
+
+    }
+
+    /**
+     * 查询盈亏记录
+     * @param request 请求
+     * @return markdown消息
+     */
+    private DingtalkMessage selectAmountCommand(String command,CallbackRequest request){
+        MarkdownMessage message = new MarkdownMessage();
+        message.setTitle(request.getSenderNick() + "**盈亏记录**");
+        AmountVO amountVO = gableAmountService.getAmount();
+        message.add("您的总盈亏金额：<font color=#3333ff>"+ amountVO.getWinAmount() + "</font>");
+        message.add("您的总胜率：<font color=#3333ff>"+ amountVO.getWinPer() + "</font>");
+        message.add("您的本月盈亏金额：<font color=#3333ff>"+ amountVO.getMonthsWinAmount() + "</font>");
+        message.add("您的本月胜率：<font color=#3333ff>"+ amountVO.getMonthsWinPer() + "</font>");
+        message.add("您的本周盈亏金额：<font color=#3333ff>"+ amountVO.getWeekWinAmount() + "</font>");
+        message.add("您的本周胜率：<font color=#3333ff>"+ amountVO.getWeekWinPer() + "</font>");
+        message.add("您的最近五笔记录如下：");
+        for(UserWinLoseInfo log :amountVO.getLogs()){
+            message.add("- " + log.getResult() + "," + log.getAmt() + "," + log.getSource());
+        }
+
+        return message;
+
+
+
 
     }
 

@@ -19,6 +19,28 @@
     from user_win_lose_info
     where id = #{id,jdbcType=INTEGER}
   </select>
+
+  <select id="getAllLogs" resultMap="BaseResultMap"  >
+    select
+    <include refid="Base_Column_List" />
+    from user_win_lose_info order by id desc
+  </select>
+  <select id="getLastLogs" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from user_win_lose_info order by id desc limit #{n}
+  </select>
+
+  <select id="getByDate" resultMap="BaseResultMap"  >
+    select
+    <include refid="Base_Column_List" />
+    from user_win_lose_info WHERE create_time &gt;= #{startDate} AND create_time &lt;=
+    #{endDate}
+    order by id desc
+  </select>
+
+
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from user_win_lose_info
     where id = #{id,jdbcType=INTEGER}

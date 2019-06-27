@@ -4,6 +4,7 @@ import cn.hutool.json.JSONUtil;
 import com.jiahui.nbarobot.dao.NbaGuessResultMapper;
 import com.jiahui.nbarobot.dao.gamble.amount.UserWinLoseInfoMapper;
 import com.jiahui.nbarobot.service.NeteaseNbaDataCopyService;
+import com.jiahui.nbarobot.service.gambleservice.amount.GableAmountService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,13 +19,13 @@ public class TestController {
     @Resource
     private NeteaseNbaDataCopyService nbaDataCopyService;
     @Resource
-    private NbaGuessResultMapper nbaGuessResultMapper;
+    private GableAmountService gableAmountService;
     @Resource
     private UserWinLoseInfoMapper userWinLoseInfoMapper;
 
     @RequestMapping("/test")
     public String test(){
-        userWinLoseInfoMapper.selectByPrimaryKey(2);
+        gableAmountService.getAmount();
         return JSONUtil.toJsonStr("测试下");
     }
 

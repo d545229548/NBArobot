@@ -2,6 +2,9 @@ package com.jiahui.nbarobot.domain.gamble.amount;
 
 import java.util.Date;
 
+/**
+ * @author dongjiahui
+ */
 public class UserWinLoseInfo {
     private Integer id;
 
