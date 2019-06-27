@@ -101,13 +101,13 @@ public class DingdingServiceImpl implements DingdingService{
         message.setTitle(request.getSenderNick() + "**盈亏记录**");
         AmountVO amountVO = gableAmountService.getAmount();
         message.add("# **盈亏记录**");
-        message.add("###### 您的总盈亏金额：<font color=#FF0000>"+ amountVO.getWinAmount() + "</font><");
-        message.add("###### 您的总胜率：<font color=#FF0000>"+ amountVO.getWinPer() + "</font>");
-        message.add("###### 您的本月盈亏金额：<font color=#FF0000>"+ amountVO.getMonthsWinAmount() + "</font>");
-        message.add("###### 您的本月胜率：<font color=#FF0000>"+ amountVO.getMonthsWinPer() + "</font>");
-        message.add("###### 您的本周盈亏金额：<font color=#FF0000>"+ amountVO.getWeekWinAmount() + "</font>");
-        message.add("###### 您的本周胜率：<font color=#FF0000>"+ amountVO.getWeekWinPer() + "</font>");
-        message.add("您的最近五笔记录如下：");
+        message.add(" 您的总盈亏金额：<font color=#FF0000>"+ amountVO.getWinAmount() + "</font>\n");
+        message.add(" 您的总胜率：<font color=#FF0000>"+ amountVO.getWinPer() + "</font>\n");
+        message.add(" 您的本月盈亏金额：<font color=#FF0000>"+ amountVO.getMonthsWinAmount() + "</font>\n");
+        message.add(" 您的本月胜率：<font color=#FF0000>"+ amountVO.getMonthsWinPer() + "</font>\n");
+        message.add(" 您的本周盈亏金额：<font color=#FF0000>"+ amountVO.getWeekWinAmount() + "</font>\n");
+        message.add(" 您的本周胜率：<font color=#FF0000>"+ amountVO.getWeekWinPer() + "</font>\n");
+        message.add("您的最近五笔记录如下：\n");
         for(UserWinLoseInfo log :amountVO.getLogs()){
             String result;
             if("win".equals(log.getResult())){
