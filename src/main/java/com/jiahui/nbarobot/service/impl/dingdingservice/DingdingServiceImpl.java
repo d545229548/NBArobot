@@ -115,7 +115,7 @@ public class DingdingServiceImpl implements DingdingService{
             }else {
                 result = "<font color=#00BB00>lose</font>";
             }
-            message.add("- " + result + "," + log.getAmt() + "," + log.getSource());
+            message.add("- " + result + "," + log.getAmt() + "," + log.getSource()+","+log.getCreateTime());
         }
 
         return message;
