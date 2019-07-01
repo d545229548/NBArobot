@@ -63,7 +63,12 @@ public class GableAmountServiceImpl implements GableAmountService{
         NumberFormat numberFormat = NumberFormat.getInstance();
         // 设置精确到小数点后2位
         numberFormat.setMaximumFractionDigits(2);
-        String result = numberFormat.format((float)win/(float)logs.size()*100);
+        String result;
+        if(logs.size() == 0){
+            result = "0.0";
+        }else {
+            result = numberFormat.format((float)win/(float)logs.size()*100);
+        }
 
         amountDTO.setWinPer(result+"%");
         return amountDTO;
