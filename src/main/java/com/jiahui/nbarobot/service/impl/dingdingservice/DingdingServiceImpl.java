@@ -119,6 +119,7 @@ public class DingdingServiceImpl implements DingdingService{
             }
             message.add("- " + key + "," + amt + "," + sourcePer.get(key));
         }
+        message.add("\n");
         message.add("您的最近五笔记录如下：\n");
         for(UserWinLoseInfo log :amountVO.getLogs()){
             String result;
@@ -127,7 +128,7 @@ public class DingdingServiceImpl implements DingdingService{
             }else {
                 result = "<font color=#00BB00>lose</font>";
             }
-            message.add("- " + result + "," + log.getAmt() + "," + log.getSource()+","+log.getCreateTime());
+            message.add("- " + result + "," + log.getAmt() + "," + log.getSource());
         }
 
         return message;
