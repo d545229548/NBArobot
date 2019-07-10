@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.text.NumberFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author dongjiahui
@@ -30,17 +32,39 @@ public class GableAmountServiceImpl implements GableAmountService{
     @Override
     public AmountVO getAmount(){
         AmountVO amountVO = new AmountVO();
-        List<UserWinLoseInfo> allLogs = userWinLoseInfoMapper.getAllLogs();
+        UserWinLoseInfo userWinLoseInfo = new UserWinLoseInfo();
+        Map count = userWinLoseInfoMapper.getCount(userWinLoseInfo);
+        List<String> sources = userWinLoseInfoMapper.getAllSource();
+        Map<String,String> sourceAmt = new HashMap<>();
+        Map<String,String> sourceWinPer = new HashMap<>();
+
+        for(String source :sources){
+            AmountDTO s;
+            userWinLoseInfo.setSource(source);
+            Map<String,String> sourceCount = userWinLoseInfoMapper.getCount(userWinLoseInfo);
+            s = calculate(sourceCount);
+            sourceAmt.put(source,s.getWinAmount().toString());
+            sourceWinPer.put(source,s.getWinPer());
+        }
+
+        amountVO.setSourceAmt(sourceAmt);
+        amountVO.setSourceWinPer(sourceWinPer);
+
+
+
         List<UserWinLoseInfo> weekLogs = userWinLoseInfoMapper.getByDate(DateUtil.getFirstDayOfWeek(new Date()),new Date());
         List<UserWinLoseInfo> monthsLogs = userWinLoseInfoMapper.getByDate(DateUtil.getCurrentMonthFirstDay(),new Date());
         List<UserWinLoseInfo> lastFiveLogs = userWinLoseInfoMapper.getLastLogs(5);
         amountVO.setLogs(lastFiveLogs);
-        amountVO.setWinAmount(calculate(allLogs).getWinAmount());
-        amountVO.setWinPer(calculate(allLogs).getWinPer());
-        amountVO.setWeekWinAmount(calculate(weekLogs).getWinAmount());
-        amountVO.setWeekWinPer(calculate(weekLogs).getWinPer());
-        amountVO.setMonthsWinAmount(calculate(monthsLogs).getWinAmount());
-        amountVO.setMonthsWinPer(calculate(monthsLogs).getWinPer());
+        AmountDTO all = calculate(count);
+        AmountDTO week = calculate(weekLogs);
+        AmountDTO months = calculate(monthsLogs);
+        amountVO.setWinAmount(all.getWinAmount());
+        amountVO.setWinPer(all.getWinPer());
+        amountVO.setWeekWinAmount(week.getWinAmount());
+        amountVO.setWeekWinPer(week.getWinPer());
+        amountVO.setMonthsWinAmount(months.getWinAmount());
+        amountVO.setMonthsWinPer(months.getWinPer());
         return amountVO;
     }
 
@@ -73,6 +97,21 @@ public class GableAmountServiceImpl implements GableAmountService{
         amountDTO.setWinPer(result+"%");
         return amountDTO;
 
+    }
+
+    private AmountDTO calculate(Map count){
+        AmountDTO amountDTO = new AmountDTO();
+        amountDTO.setWinAmount((Double)(count.get("amt")));
+        //取百分比
+        NumberFormat numberFormat = NumberFormat.getInstance();
+        // 设置精确到小数点后2位
+        numberFormat.setMaximumFractionDigits(2);
+
+        Integer win =Integer.parseInt(count.get("win").toString());
+        Integer lost = Integer.parseInt(count.get("lost").toString());
+        Integer total = win + lost;
+        amountDTO.setWinPer(numberFormat.format((float)win/(float)total*100)+"%");
+        return amountDTO;
     }
 
 

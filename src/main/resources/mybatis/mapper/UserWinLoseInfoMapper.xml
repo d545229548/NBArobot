@@ -38,7 +38,28 @@
     #{endDate}
     order by id desc
   </select>
+  <select id="getCount" resultType="java.util.Map" parameterType="com.jiahui.nbarobot.domain.gamble.amount.UserWinLoseInfo" >
+    select
+    sum(amt) as amt, sum(CASE WHEN result = 'win'THEN 1 ELSE 0 END) as win ,
+    sum(CASE WHEN result = 'lost'THEN 1 ELSE 0 END) as lost
+    from user_win_lose_info
+    where id !=0
+    <if test="source != null" >
+      and source = #{source}
+    </if>
+    <if test="result != null" >
+      and result = #{result}
+    </if>
+    <if test="user != null" >
+      and `user` = #{user}
+    </if>
+  </select>
 
+  <select id="getAllSource" resultType="java.lang.String" >
+    select
+    DISTINCT(source)
+    from user_win_lose_info
+  </select>
 
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >

@@ -3,6 +3,7 @@ package com.jiahui.nbarobot.domain.gamble.amount;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author dongjiahui
@@ -28,6 +29,10 @@ public class AmountVO {
     private String monthsWinPer;
 
     private String message;
+
+    private Map<String,String> sourceAmt;
+
+    private Map<String,String> sourceWinPer;
 
 
 }

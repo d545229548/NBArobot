@@ -107,6 +107,18 @@ public class DingdingServiceImpl implements DingdingService{
         message.add(" 您的本月胜率：<font color=#FF0000>"+ amountVO.getMonthsWinPer() + "</font>\n");
         message.add(" 您的本周盈亏金额：<font color=#FF0000>"+ amountVO.getWeekWinAmount() + "</font>\n");
         message.add(" 您的本周胜率：<font color=#FF0000>"+ amountVO.getWeekWinPer() + "</font>\n");
+        message.add("您的所有来源收支如下：\n");
+        Map<String,String> sourceAmt =amountVO.getSourceAmt();
+        Map<String,String> sourcePer = amountVO.getSourceWinPer();
+        for(String key:sourceAmt.keySet()){
+            String amt = sourceAmt.get(key);
+            if(Double.valueOf(amt) >= 0){
+                amt = "<font color=#FF0000>"+ amt +"</font>";
+            }else {
+                amt = "<font color=#00BB00>"+ amt +"</font>";
+            }
+            message.add("- " + key + "," + amt + "," + sourcePer.get(key));
+        }
         message.add("您的最近五笔记录如下：\n");
         for(UserWinLoseInfo log :amountVO.getLogs()){
             String result;

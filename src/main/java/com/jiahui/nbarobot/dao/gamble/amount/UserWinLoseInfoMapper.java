@@ -5,7 +5,11 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+/**
+ * @author dongjiahui
+ */
 public interface UserWinLoseInfoMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -24,4 +28,8 @@ public interface UserWinLoseInfoMapper {
     List<UserWinLoseInfo> getLastLogs(Integer n);
 
     List<UserWinLoseInfo> getByDate(@Param("startDate") Date startDate,@Param("endDate") Date endDate);
+
+    Map<String,String> getCount(UserWinLoseInfo record);
+
+    List<String> getAllSource();
 }
