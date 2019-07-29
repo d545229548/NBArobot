@@ -110,7 +110,7 @@ public class GableAmountServiceImpl implements GableAmountService{
         Integer win =Integer.parseInt(count.get("win").toString());
         Integer lost = Integer.parseInt(count.get("lost").toString());
         Integer total = win + lost;
-        amountDTO.setWinPer(numberFormat.format((float)win/(float)total*100)+"%");
+        amountDTO.setWinPer(String.format("%s %% (%d/%d)",numberFormat.format((float)win/(float)total*100),win,lost));
         return amountDTO;
     }
 
