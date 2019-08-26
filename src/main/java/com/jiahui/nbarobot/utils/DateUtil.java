@@ -89,7 +89,7 @@ public class DateUtil {
     public static Date addDateWeeks(Date date, int weeks) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        cal.add(Calendar.DAY_OF_WEEK,- weeks);
+        cal.add(Calendar.WEEK_OF_YEAR,- weeks);
         return cal.getTime();
     }
 

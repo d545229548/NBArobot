@@ -24,8 +24,8 @@ public class TestController {
     private UserWinLoseInfoMapper userWinLoseInfoMapper;
 
     @RequestMapping("/test")
-    public String test(){
-        gableAmountService.getAmount();
+    public String test(String nick){
+        gableAmountService.getWeekMouthsLogs(nick);
         return JSONUtil.toJsonStr("测试下");
     }
 
