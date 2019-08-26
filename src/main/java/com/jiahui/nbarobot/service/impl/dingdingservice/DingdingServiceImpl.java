@@ -9,6 +9,7 @@ import com.jiahui.nbarobot.domain.dingding.MarkdownMessage;
 import com.jiahui.nbarobot.domain.dingding.TextMessage;
 import com.jiahui.nbarobot.domain.gamble.amount.AmountVO;
 import com.jiahui.nbarobot.domain.gamble.amount.UserWinLoseInfo;
+import com.jiahui.nbarobot.domain.gamble.amount.WeekMonthsAmountVO;
 import com.jiahui.nbarobot.service.dingdingservice.DingdingService;
 import com.jiahui.nbarobot.service.gambleservice.amount.GableAmountService;
 import com.jiahui.nbarobot.utils.ExceptionUtil;
@@ -85,7 +86,9 @@ public class DingdingServiceImpl implements DingdingService{
             return gableAmountCommand(command,request);
         }else if(commandName.contains("查询盈亏")){
             return selectAmountCommand(command,request);
-        }else {
+        } else if (commandName.contains("查询周盈亏")) {
+            return selectWeekAmountCommand(command,request);
+        } else {
             return new TextMessage("目前未包含该指令");
         }
 
@@ -98,43 +101,76 @@ public class DingdingServiceImpl implements DingdingService{
      */
     private DingtalkMessage selectAmountCommand(String command,CallbackRequest request){
         MarkdownMessage message = new MarkdownMessage();
-        message.setTitle(request.getSenderNick() + "**盈亏记录**");
-        AmountVO amountVO = gableAmountService.getAmount();
-        message.add("# **盈亏记录**");
-        message.add(" 您的总盈亏金额：<font color=#FF0000>"+ amountVO.getWinAmount() + "</font>\n");
-        message.add(" 您的总胜率：<font color=#FF0000>"+ amountVO.getWinPer() + "</font>\n");
-        message.add(" 您的本月盈亏金额：<font color=#FF0000>"+ amountVO.getMonthsWinAmount() + "</font>\n");
-        message.add(" 您的本月胜率：<font color=#FF0000>"+ amountVO.getMonthsWinPer() + "</font>\n");
-        message.add(" 您的本周盈亏金额：<font color=#FF0000>"+ amountVO.getWeekWinAmount() + "</font>\n");
-        message.add(" 您的本周胜率：<font color=#FF0000>"+ amountVO.getWeekWinPer() + "</font>\n");
-        message.add("您的所有来源收支如下：\n");
-        Map<String,String> sourceAmt =amountVO.getSourceAmt();
-        Map<String,String> sourcePer = amountVO.getSourceWinPer();
-        for(String key:sourceAmt.keySet()){
-            String amt = sourceAmt.get(key);
-            if(Double.valueOf(amt) >= 0){
-                amt = "<font color=#FF0000>"+ amt +"</font>";
-            }else {
-                amt = "<font color=#00BB00>"+ amt +"</font>";
+
+            message.setTitle(request.getSenderNick() + "**盈亏记录**");
+            AmountVO amountVO = gableAmountService.getAmount();
+            message.add("# **盈亏记录**");
+            message.add(" 您的总盈亏金额：<font color=#FF0000>"+ amountVO.getWinAmount() + "</font>\n");
+            message.add(" 您的总胜率：<font color=#FF0000>"+ amountVO.getWinPer() + "</font>\n");
+            message.add(" 您的本月盈亏金额：<font color=#FF0000>"+ amountVO.getMonthsWinAmount() + "</font>\n");
+            message.add(" 您的本月胜率：<font color=#FF0000>"+ amountVO.getMonthsWinPer() + "</font>\n");
+            message.add(" 您的本周盈亏金额：<font color=#FF0000>"+ amountVO.getWeekWinAmount() + "</font>\n");
+            message.add(" 您的本周胜率：<font color=#FF0000>"+ amountVO.getWeekWinPer() + "</font>\n");
+            message.add("您的所有来源收支如下：\n");
+            Map<String,String> sourceAmt =amountVO.getSourceAmt();
+            Map<String,String> sourcePer = amountVO.getSourceWinPer();
+            for(String key:sourceAmt.keySet()){
+                String amt = sourceAmt.get(key);
+                if(Double.valueOf(amt) >= 0){
+                    amt = "<font color=#FF0000>"+ amt +"</font>";
+                }else {
+                    amt = "<font color=#00BB00>"+ amt +"</font>";
+                }
+                message.add("- " + key + "," + amt + "," + sourcePer.get(key));
             }
-            message.add("- " + key + "," + amt + "," + sourcePer.get(key));
-        }
-        message.add("\n");
-        message.add("您的最近五笔记录如下：\n");
-        for(UserWinLoseInfo log :amountVO.getLogs()){
-            String result;
-            if("win".equals(log.getResult())){
-                result = "<font color=#FF0000>win</font>";
-            }else {
-                result = "<font color=#00BB00>lose</font>";
+            message.add("\n");
+            message.add("您的最近五笔记录如下：\n");
+            for(UserWinLoseInfo log :amountVO.getLogs()){
+                String result;
+                if("win".equals(log.getResult())){
+                    result = "<font color=#FF0000>win</font>";
+                }else {
+                    result = "<font color=#00BB00>lose</font>";
+                }
+                message.add("- " + result + "," + log.getAmt() + "," + log.getSource());
             }
-            message.add("- " + result + "," + log.getAmt() + "," + log.getSource());
-        }
+
+
 
         return message;
 
 
 
+
+    }
+
+
+    private DingtalkMessage selectWeekAmountCommand(String command,CallbackRequest request){
+        MarkdownMessage message = new MarkdownMessage();
+
+        message.setTitle(request.getSenderNick() + "**盈亏记录**");
+        String nick;
+
+        if("董佳晖".equals(request.getSenderNick())){
+            nick = null;
+        }else {
+            nick = request.getSenderNick();
+        }
+
+        WeekMonthsAmountVO weekMonths = gableAmountService.getWeekMouthsLogs(request.getSenderNick());
+        message.add("# **"+ request.getSenderNick() +"周盈亏记录**");
+        message.add("<font color=#FF0000>如果为空即没有记录相关数据</font>\n");
+        message.add(" 您的本周盈亏金额：<font color=#FF0000>"+ weekMonths.getWeekWinAmount() + "</font>\n");
+        message.add(" 您的本周盈亏胜率：<font color=#FF0000>"+ weekMonths.getWeekPer() + "</font>\n");
+        message.add(" 您的上周盈亏金额：<font color=#FF0000>"+ weekMonths.getLastOneWeekAmount() + "</font>\n");
+        message.add(" 您的上周胜率：<font color=#FF0000>"+ weekMonths.getLastOneWeekPer() + "</font>\n");
+        message.add(" 您的前两周盈亏金额：<font color=#FF0000>"+ weekMonths.getLastTwoWeekAmount() + "</font>\n");
+        message.add(" 您的前两周胜率：<font color=#FF0000>"+ weekMonths.getLastTwoWeekPer() + "</font>\n");
+        message.add(" 您的前三周盈亏金额：<font color=#FF0000>"+ weekMonths.getLastThreeWeekAmount() + "</font>\n");
+        message.add(" 您的前三周胜率：<font color=#FF0000>"+ weekMonths.getLastThreeWeekPer() + "</font>\n");
+        message.add(" 您的前四周盈亏金额：<font color=#FF0000>"+ weekMonths.getLastFourWeekAmount() + "</font>\n");
+        message.add(" 您的前四周胜率：<font color=#FF0000>"+ weekMonths.getLastFourWeekPer() + "</font>\n");
+        return message;
 
     }
 

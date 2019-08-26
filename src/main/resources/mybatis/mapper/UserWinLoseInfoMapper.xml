@@ -38,6 +38,17 @@
     #{endDate}
     order by id desc
   </select>
+
+  <select id="getByDateAndNick" resultMap="BaseResultMap"  >
+    select
+    <include refid="Base_Column_List" />
+    from user_win_lose_info WHERE create_time &gt;= #{startDate} AND create_time &lt;=
+    #{endDate}
+    <if test="source != null" >
+      and user = #{nick}
+    </if>
+    order by id desc
+  </select>
   <select id="getCount" resultType="java.util.Map" parameterType="com.jiahui.nbarobot.domain.gamble.amount.UserWinLoseInfo" >
     select
     sum(amt) as amt, sum(CASE WHEN result = 'win'THEN 1 ELSE 0 END) as win ,

@@ -2,6 +2,7 @@ package com.jiahui.nbarobot.service.gambleservice.amount;
 
 import com.jiahui.nbarobot.domain.gamble.amount.AmountVO;
 import com.jiahui.nbarobot.domain.gamble.amount.UserWinLoseInfo;
+import com.jiahui.nbarobot.domain.gamble.amount.WeekMonthsAmountVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,4 +25,13 @@ public interface GableAmountService {
      * @return 结果
      */
     AmountVO getAmount();
+
+    /**
+     * 根据姓名获取周、月记录
+     * @param nick 姓名
+     * @return 结果
+     */
+    WeekMonthsAmountVO getWeekMouthsLogs(String nick);
+
+
 }

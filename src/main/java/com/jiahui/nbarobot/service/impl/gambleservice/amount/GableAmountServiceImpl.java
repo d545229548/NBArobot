@@ -4,6 +4,7 @@ import com.jiahui.nbarobot.dao.gamble.amount.UserWinLoseInfoMapper;
 import com.jiahui.nbarobot.domain.gamble.amount.AmountDTO;
 import com.jiahui.nbarobot.domain.gamble.amount.AmountVO;
 import com.jiahui.nbarobot.domain.gamble.amount.UserWinLoseInfo;
+import com.jiahui.nbarobot.domain.gamble.amount.WeekMonthsAmountVO;
 import com.jiahui.nbarobot.service.gambleservice.amount.GableAmountService;
 import com.jiahui.nbarobot.utils.DateUtil;
 import org.springframework.stereotype.Service;
@@ -52,7 +53,7 @@ public class GableAmountServiceImpl implements GableAmountService{
 
 
 
-        List<UserWinLoseInfo> weekLogs = userWinLoseInfoMapper.getByDate(DateUtil.getFirstDayOfWeek(new Date()),new Date());
+        List<UserWinLoseInfo> weekLogs = userWinLoseInfoMapper.getByDate(DateUtil.getTimeInterval(new Date()).getBegin(),new Date());
         List<UserWinLoseInfo> monthsLogs = userWinLoseInfoMapper.getByDate(DateUtil.getCurrentMonthFirstDay(),new Date());
         List<UserWinLoseInfo> lastFiveLogs = userWinLoseInfoMapper.getLastLogs(5);
         amountVO.setLogs(lastFiveLogs);
@@ -66,6 +67,32 @@ public class GableAmountServiceImpl implements GableAmountService{
         amountVO.setMonthsWinAmount(months.getWinAmount());
         amountVO.setMonthsWinPer(months.getWinPer());
         return amountVO;
+    }
+
+    @Override
+    public WeekMonthsAmountVO getWeekMouthsLogs(String nick){
+        WeekMonthsAmountVO weekMonthsAmountVO = new WeekMonthsAmountVO();
+        List<UserWinLoseInfo> weekLogs = userWinLoseInfoMapper.getByDateAndNick(DateUtil.getTimeInterval(new Date()).getBegin(),new Date(),nick);
+        weekMonthsAmountVO.setWeekWinAmount(calculate(weekLogs).getWinAmount());
+        weekMonthsAmountVO.setWeekPer(calculate(weekLogs).getWinPer());
+        DateUtil.DateRange dateRange = DateUtil.getTimeInterval(DateUtil.addDateWeeks(new Date(),1));
+        List<UserWinLoseInfo> lastOneWeekLogs = userWinLoseInfoMapper.getByDateAndNick(dateRange.getBegin(),dateRange.getEnd(),nick);
+        weekMonthsAmountVO.setLastOneWeekAmount(calculate(lastOneWeekLogs).getWinAmount());
+        weekMonthsAmountVO.setLastOneWeekPer(calculate(lastOneWeekLogs).getWinPer());
+        dateRange = DateUtil.getTimeInterval(DateUtil.addDateWeeks(new Date(),2));
+        List<UserWinLoseInfo> lastTwoWeekLogs = userWinLoseInfoMapper.getByDateAndNick(dateRange.getBegin(),dateRange.getEnd(),nick);
+        weekMonthsAmountVO.setLastTwoWeekAmount(calculate(lastTwoWeekLogs).getWinAmount());
+        weekMonthsAmountVO.setLastTwoWeekPer(calculate(lastTwoWeekLogs).getWinPer());
+        dateRange = DateUtil.getTimeInterval(DateUtil.addDateWeeks(new Date(),3));
+        List<UserWinLoseInfo> lastThreeWeekLogs = userWinLoseInfoMapper.getByDateAndNick(dateRange.getBegin(),dateRange.getEnd(),nick);
+        weekMonthsAmountVO.setLastThreeWeekAmount(calculate(lastThreeWeekLogs).getWinAmount());
+        weekMonthsAmountVO.setLastThreeWeekPer(calculate(lastThreeWeekLogs).getWinPer());
+        dateRange = DateUtil.getTimeInterval(DateUtil.addDateWeeks(new Date(),4));
+        List<UserWinLoseInfo> lastFourWeekLogs = userWinLoseInfoMapper.getByDateAndNick(dateRange.getBegin(),dateRange.getEnd(),nick);
+        weekMonthsAmountVO.setLastFourWeekAmount(calculate(lastFourWeekLogs).getWinAmount());
+        weekMonthsAmountVO.setLastFourWeekPer(calculate(lastFourWeekLogs).getWinPer());
+
+        return weekMonthsAmountVO;
     }
 
     /**

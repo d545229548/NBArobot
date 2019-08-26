@@ -29,6 +29,15 @@ public interface UserWinLoseInfoMapper {
 
     List<UserWinLoseInfo> getByDate(@Param("startDate") Date startDate,@Param("endDate") Date endDate);
 
+    /**
+     * 根据nick和日期获取记录
+     * @param startDate 开始时间
+     * @param endDate 结束时间
+     * @param nick 名称
+     * @return 记录
+     */
+    List<UserWinLoseInfo> getByDateAndNick(@Param("startDate") Date startDate,@Param("endDate") Date endDate,@Param("nick") String nick);
+
     Map<String,String> getCount(UserWinLoseInfo record);
 
     List<String> getAllSource();
