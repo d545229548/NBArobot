@@ -44,7 +44,7 @@
     <include refid="Base_Column_List" />
     from user_win_lose_info WHERE create_time &gt;= #{startDate} AND create_time &lt;=
     #{endDate}
-    <if test="source != null" >
+    <if test="nick != null" >
       and user = #{nick}
     </if>
     order by id desc
