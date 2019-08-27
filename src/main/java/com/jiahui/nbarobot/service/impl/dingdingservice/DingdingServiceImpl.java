@@ -157,7 +157,7 @@ public class DingdingServiceImpl implements DingdingService{
             nick = request.getSenderNick();
         }
 
-        WeekMonthsAmountVO weekMonths = gableAmountService.getWeekMouthsLogs(request.getSenderNick());
+        WeekMonthsAmountVO weekMonths = gableAmountService.getWeekMouthsLogs(nick);
         message.add("# **"+ request.getSenderNick() +"周盈亏记录**");
         message.add("<font color=#FF0000>如果为空即没有记录相关数据</font>\n");
         message.add(" 您的本周盈亏金额：<font color=#FF0000>"+ weekMonths.getWeekWinAmount() + "</font>\n");
@@ -269,7 +269,8 @@ public class DingdingServiceImpl implements DingdingService{
         CallbackRequest callbackRequest = new CallbackRequest();
         CallbackRequest.TextBean textBean = new CallbackRequest.TextBean();
         callbackRequest.setText(textBean);
-        textBean.setContent("记录盈亏[公众号足球,78.75,阿根廷赢了]");
+        callbackRequest.setSenderNick("蔡阳");
+        textBean.setContent("查询周盈亏[]");
         DingdingServiceImpl dingdingService = new DingdingServiceImpl();
         dingdingService.command(callbackRequest);
     }
