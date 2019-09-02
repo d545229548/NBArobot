@@ -67,12 +67,16 @@ public class DateUtil {
         // System.out.println("要计算日期为:" + sdf.format(cal.getTime())); // 输出要计算日期
         // 设置一个星期的第一天，按中国的习惯一个星期的第一天是星期一
         cal.setFirstDayOfWeek(Calendar.MONDAY);
+        cal.set(Calendar.HOUR_OF_DAY,0);
+        cal.set(Calendar.MINUTE,0);
         // 获得当前日期是一个星期的第几天
         int day = cal.get(Calendar.DAY_OF_WEEK);
         // 根据日历的规则，给当前日期减去星期几与一个星期第一天的差值
         cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - day);
         dateRange.setBegin(cal.getTime());
         cal.add(Calendar.DATE, 6);
+        cal.set(Calendar.HOUR_OF_DAY,23);
+        cal.set(Calendar.MINUTE,59);
         dateRange.setEnd(cal.getTime());
 
         return dateRange;
@@ -99,6 +103,16 @@ public class DateUtil {
         private Date begin;
 
         private Date end;
+
+    }
+
+    public static void main(String[] args){
+
+        Date date = new Date();
+        Date newData = getTimeInterval(date).getBegin();
+        Date endData = getTimeInterval(date).getEnd();
+        System.out.println(newData.toString());
+        System.out.println(endData);
 
     }
 
