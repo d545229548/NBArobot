@@ -1,8 +1,6 @@
 package com.jiahui.nbarobot.service.impl.dingdingservice;
 
 import com.alibaba.fastjson.JSON;
-import com.jiahui.nbarobot.dao.WeekQuestionMapper;
-import com.jiahui.nbarobot.domain.WeekQuestion;
 import com.jiahui.nbarobot.domain.dingding.CallbackRequest;
 import com.jiahui.nbarobot.domain.dingding.DingtalkMessage;
 import com.jiahui.nbarobot.domain.dingding.MarkdownMessage;
@@ -26,8 +24,7 @@ import java.util.*;
 @Service(value = " DingdingService")
 public class DingdingServiceImpl implements DingdingService{
 
-    @Resource
-    private WeekQuestionMapper weekQuestionMapper;
+
     @Resource
     private GableAmountService gableAmountService;
 
@@ -45,14 +42,8 @@ public class DingdingServiceImpl implements DingdingService{
         DingtalkMessage message;
 
         String content = request.getText().getContent();
-        if(content.contains("发起每周一问")){
-            message = addWeekQuestion(request);
-        }
-        else if(content.contains("每周一问")){
-            message = getWeekQuestion(request);
-        }
         //判断是否进入指令模式
-        else if(content.contains("[") && content.contains("]")){
+        if(content.contains("[") && content.contains("]")){
             message = command(request);
         }
         else {
@@ -206,49 +197,6 @@ public class DingdingServiceImpl implements DingdingService{
 
 
 
-
-    private DingtalkMessage addWeekQuestion(CallbackRequest request){
-        DingtalkMessage message;
-        WeekQuestion lastQuestion = weekQuestionMapper.selectLastQuestion();
-        List<String> names = new ArrayList(){{
-            add("董佳晖");
-            add("许琴琴");
-            add("周晓琴");
-        }};
-        if(!names.contains(request.getSenderNick())){
-            return new TextMessage("你这只🐷，你没有权限发起每周一问");
-        }
-
-
-
-        //判断上一个问题是在本周内创建的，是就不再创建，否就创建
-        if(lastQuestion == null || !isThisWeek(lastQuestion.getCreateTime())){
-            WeekQuestion weekQuestion = new WeekQuestion();
-            weekQuestion.setQuestion(request.getText().getContent().replace("发起每周一问",""));
-            weekQuestion.setCreateTime(new Date());
-            weekQuestion.setUser(request.getSenderNick());
-            weekQuestionMapper.insert(weekQuestion);
-            message = new TextMessage(request.getSenderNick() + "成功发起每周一问");
-        }else {
-            message = new TextMessage("sorry,本周已经发起过每周一问");
-        }
-
-        return message;
-    }
-
-    private DingtalkMessage getWeekQuestion(CallbackRequest request){
-        DingtalkMessage message;
-        WeekQuestion lastQuestion = weekQuestionMapper.selectLastQuestion();
-        if(lastQuestion == null){
-            return new TextMessage("没有每周一问记录");
-        }
-        if(isThisWeek(lastQuestion.getCreateTime())){
-            message = new TextMessage("本周每周一问为 ==== "+lastQuestion.getQuestion());
-        }else {
-            message = new TextMessage("本周没有发起每周一问");
-        }
-        return message;
-    }
 
 
     /**
