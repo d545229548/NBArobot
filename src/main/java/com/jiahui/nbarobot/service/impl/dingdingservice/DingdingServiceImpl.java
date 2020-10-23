@@ -63,11 +63,11 @@ public class DingdingServiceImpl implements DingdingService{
         String[] cl;
         cl = content.split(" ");
         System.out.println(Arrays.toString(cl));
-        if(cl.length != 2){
+        if(cl.length != 3){
             return new TextMessage("你会不会玩啊,专业点好么？");
         }
         MarkdownMessage message = new MarkdownMessage();
-        String imgUrl = emoticonService.makeImg(cl[1]);
+        String imgUrl = emoticonService.makeImg(cl[2]);
         System.out.println(imgUrl);
         message.setTitle("表情！");
         message.add("![]("+imgUrl+")");
