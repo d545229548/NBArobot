@@ -9,6 +9,7 @@ import com.jiahui.nbarobot.domain.gamble.amount.AmountVO;
 import com.jiahui.nbarobot.domain.gamble.amount.UserWinLoseInfo;
 import com.jiahui.nbarobot.domain.gamble.amount.WeekMonthsAmountVO;
 import com.jiahui.nbarobot.service.dingdingservice.DingdingService;
+import com.jiahui.nbarobot.service.emoticonservice.EmoticonService;
 import com.jiahui.nbarobot.service.gambleservice.amount.GableAmountService;
 import com.jiahui.nbarobot.utils.ExceptionUtil;
 import com.jiahui.nbarobot.utils.HttpRequestUtil;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
 
 
 /**
@@ -27,6 +29,8 @@ public class DingdingServiceImpl implements DingdingService{
 
     @Resource
     private GableAmountService gableAmountService;
+    @Resource
+    private EmoticonService emoticonService;
 
     private static DingtalkMessage commandTemplate = new TextMessage("记录盈亏[来源,金额,简介]");
 
@@ -46,11 +50,26 @@ public class DingdingServiceImpl implements DingdingService{
         if(content.contains("[") && content.contains("]")){
             message = command(request);
         }
+        if(content.contains("熊猫头说")){
+            message = makeImg(content);
+        }
         else {
             message = new TextMessage(request.getSenderNick() + "我没听懂你的意思,所以你是🐷");
         }
         return message;
 
+    }
+
+    private DingtalkMessage makeImg(String content){
+        String[] cl;
+        cl = content.split(" ");
+        if(cl.length != 2){
+            return new TextMessage("你会不会玩啊,专业点好么？");
+        }
+        MarkdownMessage message = new MarkdownMessage();
+        String imgUrl = emoticonService.makeImg(cl[1]);
+        message.add("![]("+imgUrl+")");
+        return message;
     }
 
 

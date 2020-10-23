@@ -3,6 +3,9 @@ package com.jiahui.nbarobot.service.dingdingservice;
 import com.jiahui.nbarobot.domain.dingding.CallbackRequest;
 import com.jiahui.nbarobot.domain.dingding.DingtalkMessage;
 
+/**
+ * @author didi
+ */
 public interface DingdingService {
 
 

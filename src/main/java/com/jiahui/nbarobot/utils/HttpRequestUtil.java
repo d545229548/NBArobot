@@ -13,10 +13,10 @@ import java.util.Map;
  */
 public class HttpRequestUtil {
 
-    private static Logger logger = LoggerFactory.getLogger(HttpRequestUtil.class);
-    private static String contType ="application/json;charset=UTF-8";
-    private static String accept = "*/*";
-    private static String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0)" +
+    private static final Logger logger = LoggerFactory.getLogger(HttpRequestUtil.class);
+    private static final String contType ="application/json;charset=UTF-8";
+    private static final String accept = "*/*";
+    private static final String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0)" +
             " AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36";
 
 
@@ -52,6 +52,17 @@ public class HttpRequestUtil {
                 .body(json)
                 .execute().body();
         logger.info("post接口 {} 的返回值为 {} 入参为 {}",url,result,json);
+        return result;
+    }
+
+    public static String postByte(String url,String content){
+        String result= HttpRequest.post(url)
+                .header("Content-Type",contType)
+                .header("Accept",accept)
+                .header("User-Agent",userAgent)
+                .body(content.getBytes())
+                .execute().body();
+        logger.info("post接口 {} 的返回值为 {} 入参为 {}",url,result,content);
         return result;
     }
 
