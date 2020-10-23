@@ -62,11 +62,14 @@ public class DingdingServiceImpl implements DingdingService{
     private DingtalkMessage makeImg(String content){
         String[] cl;
         cl = content.split(" ");
+        System.out.println(Arrays.toString(cl));
         if(cl.length != 2){
             return new TextMessage("你会不会玩啊,专业点好么？");
         }
         MarkdownMessage message = new MarkdownMessage();
         String imgUrl = emoticonService.makeImg(cl[1]);
+        System.out.println(imgUrl);
+        message.setTitle("表情！");
         message.add("![]("+imgUrl+")");
         return message;
     }
