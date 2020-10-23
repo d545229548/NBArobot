@@ -5,6 +5,6 @@ package com.jiahui.nbarobot.service.emoticonservice;
  */
 public interface EmoticonService {
 
-    String makeImg(String content);
+    String makeImg(String content,Integer id);
 
 }

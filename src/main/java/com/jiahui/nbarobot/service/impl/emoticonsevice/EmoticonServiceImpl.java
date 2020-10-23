@@ -14,8 +14,11 @@ import org.springframework.stereotype.Service;
 public class EmoticonServiceImpl implements EmoticonService {
 
     @Override
-    public String makeImg(String content) {
-        String param = "types=maker&id=60&str1="+ content +"&str2=hei";
+    public String makeImg(String content,Integer id) {
+        if(id == null){
+            id = 60;
+        }
+        String param = "types=maker&id="+id+"&str1="+ content +"&str2=hei";
         String[] cmds = {"curl","--data-binary",param,"https://www.52doutu.cn/api/"};
         JSONObject jsonObject = JSON.parseObject(ShellUtil.execCurl(cmds));
         return jsonObject.getString("url");
@@ -25,7 +28,7 @@ public class EmoticonServiceImpl implements EmoticonService {
 
     public static void main(String[] args){
         EmoticonServiceImpl service = new EmoticonServiceImpl();
-        System.out.println(service.makeImg(""));
+
     }
 
 }

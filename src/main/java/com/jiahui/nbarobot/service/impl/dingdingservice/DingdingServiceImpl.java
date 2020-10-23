@@ -49,7 +49,7 @@ public class DingdingServiceImpl implements DingdingService{
         if(content.contains("[") && content.contains("]")){
             message = command(request);
         }
-        if(content.contains("熊猫头说")){
+        if(content.contains("说")){
             message = makeImg(content);
         }
         else {
@@ -66,8 +66,18 @@ public class DingdingServiceImpl implements DingdingService{
         if(cl.length != 3){
             return new TextMessage("你会不会玩啊,专业点好么？");
         }
+        String key = cl[1];
+        Map<String, Integer> map = new HashMap<String, Integer>(){{
+            put("熊猫头说",60);
+            put("金馆长说",122);
+            put("蘑菇头说",83);
+            put("狗头说",42);
+            put("单身狗说",51);
+            put("小明被抓说",6);
+        }};
+        Integer id = map.get(key);
         MarkdownMessage message = new MarkdownMessage();
-        String imgUrl = emoticonService.makeImg(cl[2]);
+        String imgUrl = emoticonService.makeImg(cl[2],id);
         System.out.println(imgUrl);
         message.setTitle("表情！");
         message.add("![]("+imgUrl+")");
