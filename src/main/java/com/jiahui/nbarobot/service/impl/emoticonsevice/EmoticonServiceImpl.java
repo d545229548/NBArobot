@@ -3,17 +3,9 @@ package com.jiahui.nbarobot.service.impl.emoticonsevice;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.jiahui.nbarobot.service.emoticonservice.EmoticonService;
-import com.jiahui.nbarobot.utils.HttpRequestUtil;
 import com.jiahui.nbarobot.utils.ShellUtil;
-import okhttp3.*;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author didi
