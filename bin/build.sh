@@ -2,7 +2,7 @@ cd ~/NBArobot/
 git pull
 mvn clean package -DskipTests
 
-PROCESS=`ps -ef|grep ciweb|grep -v grep|grep -v PPID|awk '{ print $2}'`
+PROCESS=`ps -ef|grep nbarobot|grep -v grep|grep -v PPID|awk '{ print $2}'`
 for i in $PROCESS
 do
   echo "Kill the $1 process [ $i ]"
